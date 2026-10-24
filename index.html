@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#07051a">
 <meta name="description" content="Stick Fu: a neon stickman kung fu brawler with a story mode, weapons, hazards and a buggy chase. Plays in the browser on phone or computer.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2307051a'/%3E%3Cg fill='none' stroke='%233cf2ff' stroke-width='5' stroke-linecap='round'%3E%3Ccircle cx='34' cy='14' r='7'/%3E%3Cpath d='M32 21 28 40M30 28l14-4M28 40l-10 14M28 40l16 6'/%3E%3C/g%3E%3Cpath d='M27 12h16' stroke='%23ffd84a' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
-<style>html,body{margin:0}</style>
 <title>Stick Fu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
 <style>
@@ -183,16 +183,13 @@ body.driving .padhint{display:none!important}
 }
 @media (prefers-reduced-motion:reduce){.go{box-shadow:none}}
 </style>
-</head>
-<body>
-
 
 <div class="cab">
   <canvas id="c" width="960" height="540" aria-label="Stick Fu fighting game"></canvas>
   <button class="fsbtn" id="pauseBtn" type="button" aria-label="Pause" title="Pause"><svg viewBox="0 0 20 20" fill="currentColor"><rect x="4" y="3" width="4.5" height="14" rx="1"/><rect x="11.5" y="3" width="4.5" height="14" rx="1"/></svg></button>
   <button class="fsbtn" id="fsBtn" type="button" aria-label="Full screen" title="Full screen"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 7V2h5M13 2h5v5M18 13v5h-5M7 18H2v-5"/></svg></button>
   <div class="overlay" id="menu">
-    <span class="ver">VERSION 17.1 · ACT 2: THE TATTERED CAPE</span>
+    <span class="ver">VERSION 18 · ACT 2 COMPLETE: THE ECLIPSE</span>
     <h1 class="logo">STICK FU</h1>
     <p class="sub">SPEED IS POWER · THE ARENA BREAKS · BEST OF 3</p>
     <div class="row" role="group" aria-label="Mode">
@@ -407,7 +404,7 @@ const SFX={
 };
 const WORDS={punch:['POW!','BAM!','SOCK!','BIFF!','WHAP!'],kick:['THWACK!','WHAM!','KRAK!','THUD!'],
   spin:['KA-POW!','ZLONK!','THWOOMP!','WHAMM!'],chi:['ZAP!','KA-BOOM!','FWOOSH!'],block:['TINK!','BLOK!'],ko:['KRUNCH!','KA-BLAM!','ZOWIE!'],
-  throw:['YEET!','HEAVE!','HURL!'],crash:['CRASH!','SPLAT!','KRASSH!'],bonk:['BONK!','CLONK!'],smash:['SMASH!','KRAK!','SHATTER!'],staff:['WHACK!','THOK!','KRAKK!','THWAP!'],upper:['UPPERCUT!','BOOF!','SKY-POW!'],bicycle:['WA-TAA!','HI-YAA!','BAP-BAP!'],flip:['AXE KICK!','KA-RACK!','HEEL DROP!'],slam:['SLAM!','KA-THOOM!','DOWN YOU GO!'],sweep:['SWEEP!','TRIP!','WHOOPS!'],dive:['STOMP!','KA-THUD!','DIVE!'],burst:['KI-YAH!','HAAA!','FWOOM!'],arrow:['THWIP!','THUNK!','SHUNK!'],sword:['SHING!','SLASH!','KSSHH!'],nunchucks:['WA-CHA!','CLACK!','TWAK-TWAK!'],star:['SHINK!','TSING!','THUNK!'],lash:['SNAP!','WHIP-CRACK!','FWAP!'],kusari:['CHING!','YANK!','SHHK!'],
+  throw:['YEET!','HEAVE!','HURL!'],crash:['CRASH!','SPLAT!','KRASSH!'],bonk:['BONK!','CLONK!'],smash:['SMASH!','KRAK!','SHATTER!'],staff:['WHACK!','THOK!','KRAKK!','THWAP!'],upper:['UPPERCUT!','BOOF!','SKY-POW!'],bicycle:['WA-TAA!','HI-YAA!','BAP-BAP!'],flip:['AXE KICK!','KA-RACK!','HEEL DROP!'],slam:['SLAM!','KA-THOOM!','DOWN YOU GO!'],sweep:['SWEEP!','TRIP!','WHOOPS!'],dive:['STOMP!','KA-THUD!','DIVE!'],burst:['KI-YAH!','HAAA!','FWOOM!'],arrow:['THWIP!','THUNK!','SHUNK!'],sword:['SHING!','SLASH!','KSSHH!'],nunchucks:['WA-CHA!','CLACK!','TWAK-TWAK!'],star:['SHINK!','TSING!','THUNK!'],trident:['SHUNK!','SKEWER!','KA-THUNK!'],lash:['SNAP!','WHIP-CRACK!','FWAP!'],kusari:['CHING!','YANK!','SHHK!'],
   dragon:['RAAWR!','FWAAASH!','DRAGON!'],hundred:['ATATATA!','WA-TATA!','PAP-PAP-PAP!'],tornado:['WHIRL!','TWISTER!','FWIP-FWIP!'],stomp:['QUAKE!','KRAKA-THOOM!','RUMBLE!'],shadow:['BEHIND YOU!','POOF-WHAM!','GOTCHA!']};
 const pick=a=>a[Math.random()*a.length|0];
 /* ---------- sound buses + music ----------
@@ -505,7 +502,7 @@ const PIECES={
 };
 for(const k in PIECES){const P_=PIECES[k];P_.parts.forEach(p=>{Object.assign(p,parseSeq(p.seq,p.tr||0))});P_.len=Math.max(...P_.parts.map(p=>p.len));
   P_.parts.forEach(p=>{if(p.len<P_.len-.01&&p.len>0){const base=p.ev.slice();for(let o=p.len;o<P_.len-.01;o+=p.len)base.forEach(e=>p.ev.push({...e,b:e.b+o}))}})}
-const TRACK_PIECE={court:'ode',gorge:'beet5',train:'troll',desert:'caprice',glide:'troll',menu:'beet5',story:'ode',grid:'beet5',tower:'moon3',ice:'caprice',moon:'moon1',foundry:'troll',castle:'beet5',road:'troll',
+const TRACK_PIECE={sunken:'moon1',volcano:'troll',mirrors:'moon3',keep:'beet5',eclipse:'toccata',court:'ode',gorge:'beet5',train:'troll',desert:'caprice',glide:'troll',menu:'beet5',story:'ode',grid:'beet5',tower:'moon3',ice:'caprice',moon:'moon1',foundry:'troll',castle:'beet5',road:'troll',
   market:'caprice',bamboo:'moon3',temple:'ode',summit:'toccata',ridge:'moon1',dojo:'moon1'};
 let verb=null;
 function hall(){if(verb)return verb;verb=ac.createConvolver();const len=ac.sampleRate*2.8|0,b=ac.createBuffer(2,len,ac.sampleRate);
@@ -640,6 +637,7 @@ const TUMBLING=s=>s==='tumble'||s==='ko';
 const SW={up:{lean:-.12,crouch:8,armF:[3.05,2.75],armB:[.5,1.7],legF:[.55,.2],legB:[-.5,-.2]},
   down:{lean:.32,crouch:14,armF:[1.05,.65],armB:[-.7,.1],legF:[.9,.2],legB:[-.8,-.2]},
   back:{lean:-.05,crouch:6,armF:[2.6,2.95],armB:[.3,1.4],legF:[.6,.2],legB:[-.5,-.2]}};
+const TR={back:{lean:-.1,crouch:10,armF:[1.0,.5],armB:[.8,.4],legF:[.6,.2],legB:[-.6,-.2]},thrust:{lean:.34,crouch:16,armF:[1.62,1.57],armB:[1.4,1.5],legF:[1.0,.3],legB:[-.8,-.1]}};
 const ease=x=>1-Math.pow(1-clamp(x,0,1),3);
 function weaponPose(f,b){
   const w=f.weapon&&f.weapon.type,s=f.state,t=f.t;
@@ -647,7 +645,9 @@ function weaponPose(f,b){
     if(t<a.a0)return blend(P.guard,SW.up,t/a.a0);if(t<a.a1+.02)return blend(SW.up,SW.down,ease((t-a.a0)/(a.a1+.02-a.a0)));return blend(SW.down,P.guard,(t-a.a1-.02)/(a.dur-a.a1-.02))}
   if(w==='nunchucks'&&s==='punch'){
     if(t<.05)return blend(P.guard,SW.up,t/.05);if(t<.14)return blend(SW.up,SW.down,ease((t-.05)/.09));if(t<.27)return blend(SW.down,SW.back,ease((t-.14)/.13));return blend(SW.back,P.guard,(t-.27)/.07)}
-  if(w==='sword'&&s==='spin'){const q={...b};q.armF=t<ATK.spin.a0*.6?[2.9,2.7]:[1.6,1.5];q.armB=[-.5,.3];return q}
+  if(w==='trident'&&s==='punch'){const a=TRIDENT_ATK.punch;
+    if(t<a.a0)return blend(P.guard,TR.back,t/a.a0);if(t<a.a1+.03)return blend(TR.back,TR.thrust,ease((t-a.a0)/(a.a1+.03-a.a0)));return blend(TR.thrust,P.guard,(t-a.a1-.03)/(a.dur-a.a1-.03))}
+  if((w==='sword'||w==='trident')&&s==='spin'){const q={...b};q.armF=t<ATK.spin.a0*.6?[2.9,2.7]:[1.6,1.5];q.armB=[-.5,.3];return q}
   if(w==='nunchucks'&&s==='spin'){const q={...b},an=1.6+t/ATK.spin.dur*Math.PI*4;q.armF=[an,an-.15];q.armB=[-.5,.3];return q}
   return b;
 }
@@ -796,7 +796,8 @@ const KIND={
   merlon:{c:'#e8c98a',hp:1,falls:1,oneWay:1},
   awning:{c:'#ff4fd8',hp:2,falls:0,oneWay:1},
   bamboo:{c:'#7dffb0',hp:1,falls:1,oneWay:0},
-  cloud:{c:'#ffe4d0',hp:99,falls:0,oneWay:1}
+  cloud:{c:'#ffe4d0',hp:99,falls:0,oneWay:1},
+  ledge:{c:'#ff8a3c',hp:99,falls:0,oneWay:1}
 };
 const mkB=(x,y,w,h,kind)=>{const K=KIND[kind];return{x,y,w,h,hp:K.hp,max:K.hp,kind,c:K.c,falls:!!K.falls,oneWay:!!K.oneWay,vy:0,alive:true,flash:0,crack:Math.random()*99,hitSet:new Set()}};
 const stack=(cx,n,kind,w=32,h=30)=>{const base=gy(cx);for(let i=0;i<n;i++)blocks.push(mkB(cx-w/2,base-h*(i+1),w,h,kind))};
@@ -868,6 +869,24 @@ LEVELS.push(
   {name:'DESERT RUINS',hazard:'desert',twist:'Quicksand pits slow you down and drag at you. Sandstorms blow everyone sideways and hide the fight.',accent:'#ffd88a',cpu:'boss',cpuHp:100,
    g:1,jump:1,accel:2200,fric:.004,slide:.04,tfric:.05,speed:0,bounce:.35,bg:'desert',
    build(){stack(110,3,'stone');stack(850,3,'stone');row(430,300,4,'stone',25,22)}}
+);
+// 15–19: Act 2, part 2
+LEVELS.push(
+  {name:'SUNKEN TEMPLE',hazard:'water',twist:'Underwater. Everything floats and slows down. Watch your air: swim into the bubble streams to breathe.',accent:'#7dffe0',cpu:'boss',cpuHp:100,
+   g:.45,jump:.72,accel:1500,fric:.02,slide:.08,tfric:.1,speed:0,bounce:.3,bg:'sunken',
+   build(){stack(90,3,'stone');stack(870,3,'stone');row(380,300,8,'stone',25,16)}},
+  {name:'VOLCANO FORGE',hazard:'lava',twist:'Every so often the lava rises over the floor. Get up on the ledges or burn.',accent:'#ff5a3c',cpu:'boss',cpuHp:100,
+   g:1,jump:1.05,accel:2400,fric:.0015,slide:.02,tfric:.03,speed:0,bounce:.35,bg:'volcano',
+   build(){row(50,370,6,'ledge');row(730,370,6,'ledge');row(390,290,6,'ledge')}},
+  {name:'HALL OF MIRRORS',twist:'A hall of glowing mirrors. Your opponent knows every move you do, because it is you.',accent:'#c9b6ff',cpu:'boss',cpuHp:100,
+   g:1,jump:1,accel:2400,fric:.0015,slide:.02,tfric:.03,speed:0,bounce:.35,bg:'mirrors',
+   build(){row(130,330,4,'glass');row(710,330,4,'glass')}},
+  {name:'RONIN’S KEEP',hazard:'monsoon',twist:'A storm over Ronin’s fortress. Rain, wind and lightning that finds anyone who stands still.',accent:'#e8dcc0',cpu:'boss',cpuHp:100,
+   g:1,jump:1,accel:1900,fric:.05,slide:.1,tfric:.15,speed:60,bounce:.4,bg:'keep',
+   build(){stack(60,4,'stone');stack(880,4,'stone');row(330,320,3,'rampart',22,16);row(570,320,3,'rampart',22,16)}},
+  {name:'THE ECLIPSE',hazard:'eclipse',twist:'The top of the world under a dying sun. Hurt the Emperor badly and the eclipse goes total: only your glow lights the way.',accent:'#ffd84a',cpu:'founder',cpuHp:100,
+   g:1,jump:1,accel:2400,fric:.0015,slide:.02,tfric:.03,speed:0,bounce:.35,bg:'eclipse',
+   build(){stack(160,2,'stone');stack(800,2,'stone');row(400,310,6,'bridge')}}
 );
 function fallOut(f){
   let best=(L.safe||[W/2])[0];(L.safe||[]).forEach(x=>{if(Math.abs(x-f.x)<Math.abs(best-f.x))best=x});
@@ -998,6 +1017,7 @@ function updateF(f,o,inp,dt){
   f.dhp+=(f.hp-f.dhp)*Math.min(1,dt*3);
   f.bal=Math.min(1,(f.bal??1)+dt*.55);
   if(f.iron>0){f.iron-=dt;if(f.iron<=0){f.iron=0;tone(300,.2,'triangle',.04,.5)}}
+  p2Input(f,o,inp,dt);
   const s=f.state;f.gliding=false;
   if(s==='held'){if(f.t>1)setState(f,'idle');updateRag(f,dt);return}
   if(s==='lifted'){
@@ -1167,6 +1187,7 @@ function strike(att,def,a,isShot){
   const blocking=def.state==='block'&&def.facing===-push&&!a.low;
   const at=a.at||(isShot?{x:def.x-push*14,y:def.y-(TUMBLING(def.state)?10:82)}:a.staff?staffEnds(att)[0]:a.blade?bladePts(att)[2]:a.chuck&&att.chk?{x:att.chk.x,y:att.chk.y}:{x:att.rag[a.tip].x,y:att.rag[a.tip].y});
   const kind=a.kind||(isShot?'chi':a.staff?'staff':a.name);
+  if(def.inv>0&&att!==def){word(def.x,def.y-120,'MISS!',.8,true);return}
   if(!isShot&&def.state==='parry'&&def.t<.3&&att!==def&&!['held','lifted'].includes(att.state)){setState(att,'stagger',.7);att.vx=-push*240;word(def.x,def.y-130,'COUNTER!',1.1);SFX.block();sparks(at.x,at.y,GOLD,18,-push);if(def===fs[0])dojoMark('parry');return}
   if(def.state==='gripcast'&&def.gripT){const v=def.gripT;def.gripT=null;if(v.state==='lifted'){v.liftBy=null;enterTumble(v,0,0)}}
   if(game.tut){if(blocking&&def===fs[0])game.tut.flags.block=true;
@@ -1417,7 +1438,7 @@ function drawGhosts(f){
 /* ---------- weapons: drops, bo staff, bow ----------
    A weapon falls into every arena except the Grid. Touch it to pick it up. It breaks after a few uses,
    and you drop it whenever you're sent flying. Controls never change: punch and the roundhouse just do more. */
-const WPN={staff:{name:'STAFF',c:GOLD,uses:6},bow:{name:'BOW',c:'#9dff6a',uses:6},nunchucks:{name:'NUNCHUCKS',c:'#ff5a3c',uses:9},sword:{name:'SWORD',c:'#bff8ff',uses:7},shuriken:{name:'SHURIKEN',c:'#efeaff',uses:6},kusari:{name:'KUSARIGAMA',c:'#d0d0ff',uses:8}};
+const WPN={staff:{name:'STAFF',c:GOLD,uses:6},bow:{name:'BOW',c:'#9dff6a',uses:6},nunchucks:{name:'NUNCHUCKS',c:'#ff5a3c',uses:9},sword:{name:'SWORD',c:'#bff8ff',uses:7},shuriken:{name:'SHURIKEN',c:'#efeaff',uses:6},kusari:{name:'KUSARIGAMA',c:'#d0d0ff',uses:8},trident:{name:'TRIDENT',c:'#7dffe0',uses:7}};
 let drops=[],arrows=[];
 const STAFF_ATK={
   punch:{...ATK.punch,dmg:9,kb:280,reach:118,staff:true},
@@ -1434,7 +1455,7 @@ const CHUCK_ATK={
   kick:null,
   spin:{...ATK.spin,a0:.1,a1:.5,hits:[[.12,.22],[.25,.35],[.38,.5]],dmg:5.5,stun:.32,kb:230,reach:108,chuck:true,kind:'nunchucks'}
 };
-function weaponAtk(f,s){const T=f.weapon&&{staff:STAFF_ATK,sword:SWORD_ATK,nunchucks:CHUCK_ATK}[f.weapon.type];return T?T[s]||null:null}
+function weaponAtk(f,s){const T=f.weapon&&{staff:STAFF_ATK,sword:SWORD_ATK,nunchucks:CHUCK_ATK,trident:TRIDENT_ATK}[f.weapon.type];return T?T[s]||null:null}
 function staffEnds(f){
   const r=f.rag;let dx=r.hF.x-r.hB.x,dy=r.hF.y-r.hB.y,d=Math.hypot(dx,dy);
   if(d<12){dx=f.facing;dy=0;d=1}dx/=d;dy/=d;
@@ -1448,7 +1469,7 @@ function wearWeapon(f){
     for(let i=0;i<5;i++)shards.push({x:p.x,y:p.y,vx:(Math.random()-.5)*300,vy:-100-Math.random()*250,rot:Math.random()*6,vr:(Math.random()-.5)*16,s:6+Math.random()*8,life:1.6,c:WPN[t].c});
     word(p.x,p.y-30,'SNAP!',.8);SFX.crash()}
 }
-function weaponPool(){return['staff','bow',...['nunchucks','sword','shuriken','kusari'].filter(w=>fs.some(f=>!f.moves||f.moves.has(w)))]}
+function weaponPool(){return['staff','bow',...['nunchucks','sword','shuriken','kusari','trident'].filter(w=>fs.some(f=>!f.moves||f.moves.has(w)))]}
 function spawnDrop(){
   const type=L.hazard==='castle'&&Math.random()<.6?'bow':pick(weaponPool());
   let x;for(let i=0;i<10;i++){x=120+Math.random()*(W-240);if(fs.every(f=>Math.abs(f.x-x)>90))break}
@@ -1462,7 +1483,7 @@ function dropWeapon(f,vx=0,vy=-300){
 }
 // sword: the blade runs along the forearm, out past the hand
 function bladeDir(f){const r=f.rag;let dx=r.hF.x-r.eF.x,dy=r.hF.y-r.eF.y,d=Math.hypot(dx,dy);if(d<4){dx=f.facing;dy=0;d=1}return[dx/d,dy/d]}
-function bladePts(f){const h=f.rag.hF,[dx,dy]=bladeDir(f);return[{x:h.x+dx*24,y:h.y+dy*24},{x:h.x+dx*44,y:h.y+dy*44},{x:h.x+dx*64,y:h.y+dy*64}]}
+function bladePts(f){const h=f.rag.hF,[dx,dy]=bladeDir(f),k=f.weapon&&f.weapon.type==='trident'?1.3:1;return[{x:h.x+dx*24*k,y:h.y+dy*24*k},{x:h.x+dx*44*k,y:h.y+dy*44*k},{x:h.x+dx*64*k,y:h.y+dy*64*k}]}
 // nunchucks: one stick in the hand, the other swings free on its chain and whips out on every attack
 function chuckStep(f,dt){
   if(!f.weapon||f.weapon.type!=='nunchucks'||dt<=0){f.chk=null;f.chkS=null;return}
@@ -1557,6 +1578,7 @@ function drawWeaponHeld(f){
   if(!f.weapon)return;const c=WPN[f.weapon.type].c;
   if(f.weapon.type==='staff'){const[e0,e1]=staffEnds(f);drawStaff(e0,e1,c)}
   else if(f.weapon.type==='sword'){const[dx,dy]=bladeDir(f);drawSword(ctx,f.rag.hF,dx,dy,c)}
+  else if(f.weapon.type==='trident'){const[dx,dy]=bladeDir(f);drawTrident(ctx,f.rag.hF,dx,dy,c)}
   else if(f.weapon.type==='nunchucks'){if(!f.chk)return;const h=f.rag.hF,[dx,dy]=bladeDir(f),A=f.chkA,E=f.chk,ex=A.x-E.x,ey=A.y-E.y,el=Math.hypot(ex,ey)||1;
     drawChucks(ctx,{x:h.x-dx*5,y:h.y-dy*5},A,f.chkS.p1,f.chkS.p2,c)}
   else if(f.weapon.type==='shuriken'){const h=f.rag.hF;drawStar(ctx,h.x,h.y,6,clock*3,f.color)}
@@ -1572,6 +1594,7 @@ function drawDrops(){
     ctx.translate(d.x,d.y-14+bob);ctx.rotate(d.landed?0:d.rot);
     if(d.type==='staff'){ctx.rotate(-.6);drawStaff({x:34,y:0},{x:-34,y:0},c)}
     else if(d.type==='sword'){ctx.rotate(-.7);drawSword(ctx,{x:-24,y:0},1,0,c,40)}
+    else if(d.type==='trident'){ctx.rotate(-.7);drawTrident(ctx,{x:-20,y:0},1,0,c,64)}
     else if(d.type==='nunchucks'){drawChucks(ctx,{x:-24,y:-6},{x:-4,y:-6},{x:4,y:6},{x:24,y:6},c)}
     else if(d.type==='shuriken'){drawStar(ctx,-10,0,8,clock*2,c);drawStar(ctx,10,2,8,-clock*2,c)}
     else if(d.type==='kusari'){ctx.strokeStyle=c;ctx.shadowColor=c;ctx.shadowBlur=12;ctx.lineWidth=3;ctx.beginPath();ctx.arc(14,0,10,-.4,Math.PI*.9);ctx.stroke();ctx.setLineDash([3,3]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-20,6);ctx.quadraticCurveTo(-4,16,6,4);ctx.stroke();ctx.setLineDash([])}
@@ -1593,7 +1616,7 @@ function drawDrops(){
 let hz={kind:null};
 const ICE_CEIL=104,PRESS_UP=150;
 function hzInit(){
-  hz={kind:L.hazard||null};act2HzInit();
+  hz={kind:L.hazard||null};act2HzInit();p2HzInit();mirImgs=[];
   if(hz.kind==='icicles'){hz.ice=[];for(let x=60;x<910;x+=56)hz.ice.push({x:x+Math.random()*16,len:22+Math.random()*30,st:'hang',t:0,y:0,vy:0,grow:1});hz.iceT=9}
   if(hz.kind==='airlock')hz.door={side:Math.random()<.5?-1:1,st:'closed',t:0,y0:310,y1:445};
   if(hz.kind==='monsoon'){hz.cd=3;hz.bolt=null}
@@ -1869,6 +1892,7 @@ function aiInput(me,op,dt){
     if(shot&&mine('parry')&&Math.random()<D.block*.6){ai.capeAt=clock+2.2;me.wantSpecial={m:'parry',at:clock}}
     else if(swing&&mine('parry')&&Math.random()<.05){ai.capeAt=clock+4;me.wantSpecial={m:'parry',at:clock}}
     else if(d>85&&d<150&&mine('lash')&&Math.random()<D.aggr*.1){ai.capeAt=clock+3;me.wantSpecial={m:'lash',at:clock}}}
+  {const p2a=p2AI(me,op,D,swing,mine);if(p2a)return p2a}
   if(hz.kind==='train'&&hz.tun&&hz.tun.st==='warn'&&hz.tun.t<.7&&me.grounded&&Math.random()<D.block+.25){ai.hold={...NONE,down:1};return{...NONE,down:1}}
   if(hz.kind==='desert'&&hz.pits&&me.grounded&&hz.pits.some(([a,b])=>me.x>a&&me.x<b)){const h2={...NONE,[me.x<(hz.pits.find(([a,b])=>me.x>a&&me.x<b)[0]+hz.pits.find(([a,b])=>me.x>a&&me.x<b)[1])/2?'left':'right']:1};ai.hold=h2;return{...h2,jump:1}}
   if(me.en>=100&&mine('grip')&&d<420&&d>110&&!['tumble','ko','held','lifted','getup'].includes(op.state)&&r<D.chi*.5){ai.hold={...NONE};return{...NONE,down:1,throw:1}}
@@ -1910,7 +1934,7 @@ function dust(x,y=gy(x)){for(let i=0;i<10;i++)parts.push({x:x+(Math.random()-.5)
 
 /* ---------- backgrounds (pre-rendered per arena) ---------- */
 const bg=document.createElement('canvas');bg.width=W;bg.height=H;
-const SKY={court:['#2a1030','#d86a5a','#3a1c18'],gorge:['#0a1a2a','#4a6a8a','#2a2a30'],train:['#05050f','#1a1a3a','#1a1408'],desert:['#3a2010','#e8a050','#8a6030'],dojo:['#140805','#3a1d10','#3a2212'],market:['#0a0418','#2a0b3a','#1a0a26'],bamboo:['#031008','#0b2a1a','#0e2418'],temple:['#2a1846','#c46a7a','#3a2340'],summit:['#0b0210','#3a0a24','#1a0a1a'],castle:['#120824','#5a1f3a','#24102e'],grid:['#07051a','#170b3a','#24104f'],tower:['#040c1a','#0b2236','#0f2f45'],ice:['#06142a','#12345a','#cfeaff'],
+const SKY={sunken:['#03141e','#0a4a5a','#08303a'],volcano:['#1a0404','#5a1a0a','#2a0a06'],mirrors:['#0a0618','#2a1a4a','#140c28'],keep:['#04040a','#20203a','#141420'],eclipse:['#020208','#1a1030','#0c0a18'],court:['#2a1030','#d86a5a','#3a1c18'],gorge:['#0a1a2a','#4a6a8a','#2a2a30'],train:['#05050f','#1a1a3a','#1a1408'],desert:['#3a2010','#e8a050','#8a6030'],dojo:['#140805','#3a1d10','#3a2212'],market:['#0a0418','#2a0b3a','#1a0a26'],bamboo:['#031008','#0b2a1a','#0e2418'],temple:['#2a1846','#c46a7a','#3a2340'],summit:['#0b0210','#3a0a24','#1a0a1a'],castle:['#120824','#5a1f3a','#24102e'],grid:['#07051a','#170b3a','#24104f'],tower:['#040c1a','#0b2236','#0f2f45'],ice:['#06142a','#12345a','#cfeaff'],
   moon:['#020108','#0c0820','#2a2640'],foundry:['#0d0405','#2a0d08','#2a1208']};
 function seeded(n){let x=n;return()=>((x=(x*16807)%2147483647)/2147483647)}
 function paintBg(L){
@@ -1950,6 +1974,7 @@ function paintBg(L){
     b.setTransform(1,0,0,1,0,0);
     b.fillStyle='#1a1630';b.beginPath();b.moveTo(0,GROUND);for(let x=0;x<=W;x+=40)b.lineTo(x,GROUND-30-Math.sin(x*.013)*18-rnd()*10);b.lineTo(W,GROUND);b.fill();
   }else if(['court','gorge','train','desert'].includes(L.bg)){paintAct2Bg(b,L,rnd);
+  }else if(['sunken','volcano','mirrors','keep','eclipse'].includes(L.bg)){paintP2Bg(b,L,rnd);
   }else if(L.bg==='dojo'){
     // a wooden dojo at night: paper screens glowing amber, lanterns, a weapon rack
     b.fillStyle='#24120a';b.fillRect(0,60,W,GROUND-60);
@@ -2032,8 +2057,8 @@ function paintBg(L){
 // ambient weather: snow on the rink, embers in the foundry, dust in low gravity
 let amb=[];
 function updateAmb(dt){
-  if(L.bg==='bamboo'){for(let i=0;i<Math.ceil(dt*180);i++)if(amb.length<180)amb.push({x:Math.random()*(W+200),y:-10,vx:-140,vy:950,life:1.2,k:'rain'})}
-  const kind=L.bg==='ice'?'snow':L.bg==='foundry'||L.bg==='summit'?'ember':L.bg==='moon'?'dust':L.bg==='temple'||L.bg==='court'?'petal':null;
+  if(L.bg==='bamboo'||L.bg==='keep'){for(let i=0;i<Math.ceil(dt*180);i++)if(amb.length<180)amb.push({x:Math.random()*(W+200),y:-10,vx:-140,vy:950,life:1.2,k:'rain'})}
+  const kind=L.bg==='ice'?'snow':L.bg==='foundry'||L.bg==='summit'||L.bg==='volcano'?'ember':L.bg==='moon'?'dust':L.bg==='temple'||L.bg==='court'?'petal':null;
   if(kind&&amb.length<70&&Math.random()<dt*40)amb.push(kind==='ember'?{x:Math.random()*W,y:GROUND,vx:(Math.random()-.5)*20,vy:-30-Math.random()*60,life:6,k:kind}
     :kind==='snow'?{x:Math.random()*W,y:-5,vx:-10-Math.random()*20,vy:30+Math.random()*30,life:16,k:kind}:{x:Math.random()*W,y:Math.random()*GROUND,vx:(Math.random()-.5)*8,vy:-4,life:5,k:kind});
   amb.forEach(p=>{p.x+=(p.vx+(p.k==='rain'?0:Math.sin(clock+p.y*.02)*10))*dt;p.y+=p.vy*dt;p.life-=dt});amb=amb.filter(p=>p.life>0&&p.y<(p.k==='rain'?H:GROUND+2)&&p.y>-12);
@@ -2159,10 +2184,15 @@ const MOVES={
   lash:{name:'CAPE LASH',key:'hold Space, tap ← once (with a cape)',touch:'hold SPECIAL, drag a little ← (with a cape)',desc:'Whip your cape forward like a blade. Longer reach than a kick, and it swats chi blasts and shuriken out of the air.',st:'lash'},
   parry:{name:'PARRY SWIRL',key:'hold Space, tap ↖ once (with a cape)',touch:'hold SPECIAL, drag a little ↖ (with a cape)',desc:'Spin your cape around you. Chi blasts, arrows, shuriken and even dragons go straight back at whoever sent them, and a punch or kick that lands in the swirl gets countered.',st:'parry'},
   kusari:{name:'KUSARIGAMA',key:'pick it up when it drops · {punch} throw the sickle · {spin} whirl the chain',touch:'pick it up · PUNCH throw the sickle · ROUNDHOUSE whirl the chain',desc:'A sickle on a long chain. Throw it to hook them from far away and drag them in, or whirl it around you to hit three times.',st:'punch',wpn:'kusari'},
+  trident:{name:'TRIDENT',key:'pick it up when it drops · {punch} thrust · {spin} sweep',touch:'pick it up · PUNCH thrust · ROUNDHOUSE sweep',desc:'Marea\u2019s trident. The longest reach in the game: a fast forward thrust that keeps them at arm\u2019s length, and a wide sweep that clears both sides.',st:'punch',wpn:'trident'},
+  mirror:{name:'MIRROR STEP',key:'tap {block} twice, fast',touch:'tap BLOCK twice, fast',desc:'Blink backwards out of trouble and leave a glowing reflection where you stood. For a split second nothing can touch you. Use it right as they swing.',st:'block'},
   hundred:{name:'HUNDRED HANDS',key:'hold Space, tap → twice',touch:'hold SPECIAL, drag far →',desc:'A blur of palms that pins them in place, then a finisher that sends them flying. Get close first. Half a chi bar.',st:'hundred'}
 };
 const ALL_MOVES=Object.keys(MOVES);
-const EXTRA_CARDS={cape_battle:{name:'BATTLE CAPE',key:'it is on you now; change it in the Dojo wardrobe',touch:'it is on you now; change it in the Dojo wardrobe',desc:'Your first cape, from the Old Master. It flows in the wind of every arena and lets you glide, lash and parry.',st:'win',cape:'battle'},
+const EXTRA_CARDS={cape_flame:{name:'FLAME CAPE',key:'it is on you now; change it in the Dojo wardrobe',touch:'it is on you now; change it in the Dojo wardrobe',desc:'Ember\u2019s cape, still burning. Heat lifts the hem, so it floats up and throws sparks behind every move.',st:'win',cape:'flame'},
+  cape_tatter:{name:'TATTERED CAPE',key:'Dojo, WARDROBE, CAPE',touch:'Dojo, WARDROBE, CAPE',desc:'Ronin\u2019s own cape, torn from a hundred fights. Ragged and quick in the wind.',st:'win',cape:'tatter'},
+  cape_champ:{name:'CHAMPION CAPE',key:'Dojo, WARDROBE, CAPE',touch:'Dojo, WARDROBE, CAPE',desc:'The gold cape of the Emperor. The heaviest, widest cape in the game, and it sparkles. You earned it.',st:'win',cape:'champ'},
+  cape_battle:{name:'BATTLE CAPE',key:'it is on you now; change it in the Dojo wardrobe',touch:'it is on you now; change it in the Dojo wardrobe',desc:'Your first cape, from the Old Master. It flows in the wind of every arena and lets you glide, lash and parry.',st:'win',cape:'battle'},
   cape_shadow:{name:'SHADOW CAPE',key:'Dojo, WARDROBE, CAPE',touch:'Dojo, WARDROBE, CAPE',desc:'Torn from Ronin as he escaped across the rooftops. Slow and dreamy, it lags behind every move you make.',st:'win',cape:'shadow'},
   dojo:{name:'THE DOJO',key:'main menu, DOJO',touch:'main menu, DOJO',desc:'Practise every move you know on a wooden dummy, take weapons off the rack and change your look. Your belt rank grows as you master moves.',st:'win'}};
 const SENSEI=[
@@ -2238,6 +2268,29 @@ const ACT2_TBC=[
   {cap:'On a far dune, Ronin watches the dust settle.',who:'RONIN',say:'You are getting better. Find me where the sea swallowed a temple.',fig:[[.6,'idle',0,-1,'foe']]},
   {cap:'ACT 2 · PART 2 IS COMING: the sunken temple, the volcano forge, the hall of mirrors and Ronin himself.',who:'',say:'',fig:[[.5,'win',.2,1,'you']]}
 ];
+CHAPTERS.push(
+  {title:'SUNKEN TEMPLE',arena:14,cpu:'boss',reward:['trident'],act:2,foe:{name:'MAREA',color:'#7dffe0'},panels:[
+    {cap:'Where the sea swallowed a temple, the water is warm and full of light. Someone has been waiting a long time.',who:'MAREA',say:'Ronin said you would come. He said you would drown.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',.2,-1,'foe']]},
+    {cap:'Air runs out fast down here. The bubble streams by the pillars let you breathe.',who:'MAREA',say:'I can hold my breath for nine minutes. Can you?',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.2,-1,'foe']]}]},
+  {title:'VOLCANO FORGE',arena:15,cpu:'boss',reward:[],act:2,foe:{name:'EMBER',color:'#ff5a3c',cape:'flame'},panels:[
+    {cap:'Inside the mountain, the forge that made every weapon in the League. Its smith wears a cape that never stops burning.',who:'EMBER',say:'Ronin paid me in gold. You can pay me in pain.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',.2,-1,'foe']]},
+    {cap:'',who:'EMBER',say:'When the lava rises, find high ground. Or don’t. Makes no difference to me.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.3,-1,'foe']]}]},
+  {title:'HALL OF MIRRORS',arena:16,cpu:'boss',reward:['mirror'],act:2,foe:{name:'SHADOW YOU',color:'#8f6cff',mirror:true},panels:[
+    {cap:'A hall of mirrors under Ronin’s keep. Your reflection does not copy you. It steps out of the glass.',who:'SHADOW YOU',say:'Every move you learned, I learned too.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',0,-1,'foe']]},
+    {cap:'',who:'SHADOW YOU',say:'You cannot beat yourself. Nobody can.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.2,-1,'foe']]}]},
+  {title:'RONIN’S KEEP',arena:17,cpu:'boss',reward:[],act:2,foe:{name:'RONIN',color:'#e8dcc0',cape:'tatter',ronin:true},panels:[
+    {cap:'At last: Ronin, on the roof of his keep, in the middle of a storm.',who:'RONIN',say:'I took my cape from the last champion. I am going to take yours.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',.2,-1,'foe']]},
+    {cap:'',who:'RONIN',say:'Lash, parry, glide. Everything you know, I invented. Show me you understand it.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.3,-1,'foe']]}]},
+  {title:'THE ECLIPSE',arena:18,cpu:'boss',reward:[],act:2,foe:{name:'THE EMPEROR',color:'#ffd84a',cape:'champ',emperor:true},panels:[
+    {cap:'Ronin, beaten, points at the sky. The sun is going dark.',who:'RONIN',say:'I was never the one in charge. He built the League. He built the Founder. He is the eclipse.',fig:[[.3,'idle',0,1,'you'],[.7,'hit',.2,-1,'foe']]},
+    {cap:'On the highest peak in the world, a man in a gold cape turns around.',who:'THE EMPEROR',say:'Every champion ends up mine. Kneel, or be the last one.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.3,-1,'foe']]}]}
+);
+const ACT2_END=[
+  {cap:'The Emperor falls. The moon slides off the sun and the light comes back all at once.',who:'YOU',say:'Nobody owns the League. Not anymore.',fig:[[.45,'win',.4,1,'you']]},
+  {cap:'Ronin gets up, bows, and leaves his tattered cape at your feet.',who:'RONIN',say:'It was always the champion’s. Wear it well.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',.2,-1,'foe']]},
+  {cap:'Far below the Sunken Temple, a door that was sealed before the League existed swings open. Eight glowing eyes blink awake.',who:'A VOICE',say:'A champion with a gold cape. Good. It will look wonderful on my wall.',fig:[[.5,'win',.2,1,'you']]},
+  {cap:'END OF ACT 2 · ACT 3: THE DEEP IS COMING',who:'',say:'',fig:[[.5,'idle',0,1,'you']]}
+];
 let storyMax=0;try{storyMax=Math.min(CHAPTERS.length,parseInt(localStorage.getItem('stickfu.story')||'0',10)||0)}catch(e){}
 const story={ch:0,sel:Math.min(storyMax,CHAPTERS.length-1),panels:[],ix:0,after:null,title:'',foe:null,reward:null};
 const rewardsOf=C=>[].concat(C.reward);
@@ -2298,6 +2351,7 @@ function drawDemo(){
   const k=drawStick(c,x,y,m.st,t,1,C1,1);
   if(m.wpn){const sx=spinSx({state:m.st,t}),hx=x+k.armF[1].x*sx,hy=y+k.armF[1].y,ex=x+k.armF[0].x*sx,ey=y+k.armF[0].y;let dx=hx-ex,dy=hy-ey;const dd=Math.hypot(dx,dy)||1;dx/=dd;dy/=dd;
     if(m.wpn==='sword')drawSword(c,{x:hx,y:hy},dx,dy,WPN.sword.c,52);
+    else if(m.wpn==='trident')drawTrident(c,{x:hx,y:hy},dx,dy,WPN.trident.c,80);
     else if(m.wpn==='nunchucks'){const A={x:hx+dx*14,y:hy+dy*14},an=Math.atan2(dy,dx)+Math.sin(demo.t*12)*1.3,E={x:A.x+Math.cos(an)*30,y:A.y+Math.sin(an)*30};
       drawChucks(c,{x:hx-dx*4,y:hy-dy*4},A,{x:A.x+Math.cos(an)*12,y:A.y+Math.sin(an)*12},E,WPN.nunchucks.c)}
     else if(m.wpn==='kusari'){const kk=(demo.t%1),dd=kk<.45?190*kk/.45:190*(1-(kk-.45)/.55);c.save();c.strokeStyle='#d0d0ff';c.setLineDash([3,3]);c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+dd,hy);c.stroke();c.setLineDash([]);c.lineWidth=3;c.beginPath();c.arc(hx+dd,hy,9,-.4,Math.PI*.9);c.stroke();c.restore()}
@@ -2978,6 +3032,8 @@ function startMatch(){
     fs=[mkF(380,1,C1,'YOU'),mkF(580,-1,C.foe.color,C.foe.name)];
     const known=storyMoves(story.ch);fs[0].moves=known;fs[1].moves=new Set([...known,...rewardsOf(C)]);
     if(C.foe.cape){capeAttach(fs[1],C.foe.cape);['lash','parry','glide'].forEach(m=>fs[1].moves.add(m))}
+    if(C.foe.mirror){fs[1].outfit={...outfit,glow:C.foe.color};if(outfit.cape&&outfit.cape!=='none'){capeAttach(fs[1],outfit.cape);['lash','parry','glide'].forEach(m=>fs[1].moves.add(m))}}
+    if(C.foe.ronin||C.foe.emperor)fs[1].moves.add('mirror');
     if(story.ch>0&&rewardsOf(CHAPTERS[story.ch-1]).length){const ms=rewardsOf(CHAPTERS[story.ch-1]);game.hint={text:(ms.length>1?'NEW: ':'NEW MOVE: ')+ms.map(m=>MOVES[m].name+' · '+moveHow(m)).join('  /  '),t:9}}
   }else{
     const cpuName='CPU '+'·'.repeat(levelIx+1);
@@ -2996,8 +3052,8 @@ function storyAdvance(){
     if(ch===11)showPanels('THE END?',ENDING,'FINISH',()=>{const t=document.getElementById('resultText'),sub=document.getElementById('resultSub'),again=document.getElementById('again');
       game.phase='match';t.textContent='CHAMPION';t.style.color=GOLD;sub.textContent='Act 1 complete. Act 2 is unlocked: capes, gliding and a new villain.';game.result='act2';again.textContent='ACT 2';over.hidden=false});
     else if(next<CHAPTERS.length)startChapter(next);
-    else showPanels('TO BE CONTINUED',ACT2_TBC,'FINISH',()=>{const t=document.getElementById('resultText'),sub=document.getElementById('resultSub'),again=document.getElementById('again');
-      game.phase='match';t.textContent='TO BE CONTINUED';t.style.color='#a98bff';sub.textContent='Act 2, part 1 complete. Part 2 is coming.';game.result='storyDone';again.textContent='PLAY AGAIN';over.hidden=false})};
+    else showPanels('END OF ACT 2',(story.foe=CHAPTERS[20].foe,ACT2_END),'FINISH',()=>{const t=document.getElementById('resultText'),sub=document.getElementById('resultSub'),again=document.getElementById('again');
+      game.phase='match';t.textContent='TO BE CONTINUED';t.style.color=GOLD;sub.textContent='Act 2 complete. You wear the Champion Cape. Act 3 is coming.';game.result='storyDone';again.textContent='PLAY AGAIN';over.hidden=false})};
   showUnlocks(rewardsOf(CHAPTERS[ch]).concat(newCapes.map(c=>'cape_'+c.id)),firstDojo?()=>senseiScene(cont):cont);
 }
 function endRound(w){if(game.phase!=='fight')return;game.phase='end';game.pt=0;game.winner=w;if(w)w.wins++}
@@ -3033,7 +3089,7 @@ function step(dt){
   const ia=fight?(wheel.open&&wheel.src==='key'?NONE:readKeys(solo?MAP1CPU:MAP1)):NONE;
   const ib=fight&&!b.dummy?(solo?(game.tut?trainingInput(b,a,sdt):aiInput(b,a,sdt)):readKeys(MAP2)):NONE;
   if(game.hint&&fight)game.hint.t-=dt;
-  hzUpdate(sdt);act2Hz(sdt,fight);
+  hzUpdate(sdt);act2Hz(sdt,fight);p2Hz(sdt,fight);p2Tick(sdt);
   updateF(a,b,ia,sdt);if(b.dummy)updateDummy(b,a,sdt);else updateF(b,a,ib,sdt);
   capeStep(a,sdt);capeStep(b,sdt);
   if(game.mode==='dojo'){a.hp=a.dhp=a.maxHp;if(dojo.opt.chi)a.en=100;if(dojo.opt.weapon&&!a.weapon&&!TUMBLING(a.state)&&a.state!=='held')a.weapon={type:dojo.opt.weapon,uses:Infinity}}
@@ -3084,10 +3140,10 @@ function render(){
     ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-cx,-cy)}
   if(shake>.3)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
   ctx.drawImage(bg,0,0);
-  drawAmb();act2DrawBack();hzDrawBack();drawBlocks();
+  drawAmb();act2DrawBack();p2DrawBack();hzDrawBack();drawBlocks();
   drawDrops();
-  if(fs.length){fs.forEach(drawCapeF);fs.forEach(drawGhosts);fs.forEach(drawTrail);fs.forEach(f=>f.dummy?drawDummy(f):drawF(f));fs.forEach(drawWeaponHeld);fs.forEach(drawGrip);fs.forEach(drawTell)}
-  hzDrawFront();act2DrawFront();drawRings();drawQuakes();drawDragons();
+  if(fs.length){fs.forEach(drawCapeF);fs.forEach(drawGhosts);drawMirImgs();fs.forEach(drawTrail);fs.forEach(f=>f.dummy?drawDummy(f):drawF(f));fs.forEach(drawWeaponHeld);fs.forEach(drawGrip);fs.forEach(drawTell)}
+  hzDrawFront();act2DrawFront();p2DrawFront();drawRings();drawQuakes();drawDragons();
   shots.forEach(s=>{ctx.save();ctx.shadowColor=s.color;ctx.shadowBlur=28;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(s.x,s.y,13+Math.sin(s.age*30)*2,0,7);ctx.fill();
     ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,6,0,7);ctx.fill();ctx.restore()});
   parts.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.c;ctx.fillRect(p.x-p.sz/2,p.y-p.sz/2,p.sz,p.sz)});ctx.globalAlpha=1;
@@ -3220,6 +3276,9 @@ function airAt(x,y,c){
   if(hz.kind==='desert'&&hz.storm&&hz.storm.st==='storm')vx+=hz.storm.dir*800;
   if(L.bg==='gorge')vx+=160*Math.sin(t*.6);
   if(L.bg==='temple')vx+=120;
+  if(L.bg==='keep')vx-=380;
+  if(L.bg==='sunken'){vx+=70*Math.sin(t*.7);vy-=40}
+  if(L.bg==='volcano')vy-=120;
   if(game.phase==='glide'&&gl)vx-=gl.vx;
   const g=Math.abs(vx)>50?.35:.12;
   vx*=1+g*(Math.sin(t*1.3+y*.02)*.5+Math.sin(t*3.7+c*1.7+x*.01)*.3);
@@ -3228,7 +3287,7 @@ function airAt(x,y,c){
 }
 function capeStep(f,dt){
   const cl=f.cl;if(!cl||dt<=0)return;const d=cl.d,fa=f.facing,n=f.rag.neck,hp=f.rag.hip;
-  const wet=L.bg==='bamboo'?.85:0,heat=d.heat+(L.bg==='foundry'?.5:L.bg==='desert'?.2:hz.kind==='summit'&&hz.phase2?.3:0);
+  const wet=L.bg==='bamboo'||L.bg==='keep'?.85:L.bg==='sunken'?.4:0,heat=Math.min(.5,d.heat+(L.bg==='foundry'?.5:L.bg==='volcano'?.2:L.bg==='desert'?.2:hz.kind==='summit'&&hz.phase2?.3:0));
   const G2=G*.6*(1+wet*.5),dragK=d.drag*(1-wet*.7)/(d.mass*(1+wet*.9)),damp=1-(.004+d.damp+wet*.02);
   const ux=n.x-hp.x,uy=n.y-hp.y,ul=Math.hypot(ux,uy)||1,sx=f.state==='parry'?Math.cos(f.t/.42*Math.PI*2):1;
   const sub=2,h=dt/sub;
@@ -3264,6 +3323,7 @@ function drawCapeF(f){
   else{ctx.beginPath();for(let c=0;c<cl.C;c++){const p=P_(cl.R-1,c);c?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)}ctx.stroke()}
   ctx.globalAlpha=.6;ctx.lineWidth=1.6;ctx.strokeStyle=d.col;ctx.shadowColor=d.col;
   [0,cl.C-1].forEach(c=>{ctx.beginPath();for(let r=0;r<cl.colLen[c];r++){const p=P_(r,c);r?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)}ctx.stroke()});
+  capeFx(f);
   if(f.state==='lash'){ctx.globalAlpha=.8;ctx.strokeStyle='#fff';ctx.shadowColor='#fff';ctx.lineWidth=2;ctx.beginPath();for(let c=0;c<cl.C;c++){const p=P_(cl.colLen[c]-1,c);c?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)}ctx.stroke()}
   ctx.restore();
 }
@@ -3491,6 +3551,119 @@ function glRender(){
   ctx.restore();
 }
 
+/* ---------- Act 2, part 2: water, lava, mirrors, the eclipse; trident and mirror step ---------- */
+CAPES.push(
+  {id:'flame',name:'FLAME CAPE',col:'#ff8a3c',rows:9,cols:4,seg:9.5,mass:.9,drag:3,damp:0,heat:.22,flare:1,need:19,embers:true},
+  {id:'champ',name:'CHAMPION CAPE',col:'#ffd84a',rows:10,cols:6,seg:9.5,mass:1.2,drag:2.8,damp:.003,heat:0,flare:1.2,need:22,sparkle:true}
+);
+capeDef('tatter').need=21;
+// Mirror Step: double-tap block to blink away, leaving a mirror image behind; for a moment nothing can touch you
+function mirrorStep(f,o){
+  if((f.mirCd||0)>clock)return false;f.mirCd=clock+1.1;
+  const away=f.x<o.x?-1:1;let nx=clamp(f.x+away*135,WALL_L+20,WALL_R-20);if(gy(nx)>H)nx=clamp(f.x-away*60,WALL_L+20,WALL_R-20);
+  const pts={};JOINTS.forEach(j=>pts[j]={x:f.rag[j].x,y:f.rag[j].y});mirImgs.push({pts,life:.6,c:f.color});
+  const dx=nx-f.x;f.x=nx;for(const j in f.rag){const p=f.rag[j];if(p&&p.x!==undefined){p.x+=dx;p.ox+=dx}}if(f.cl)f.cl.pts.forEach(p=>{p.x+=dx;p.ox+=dx});
+  f.vx=0;f.inv=.3;f.facing=o.x>f.x?1:-1;setState(f,f.grounded?'idle':'jump');
+  tone(1800,.15,'sine',.05,.4);tone(900,.2,'triangle',.04,1.5,.05);sparks(f.x-dx/2,f.y-50,'#c9b6ff',12,away);
+  if(f===fs[0])dojoMark('mirror');return true;
+}
+// trident: a long thrust and a wide sweep
+const TRIDENT_ATK={
+  punch:{...ATK.punch,dur:.34,a0:.1,a1:.2,dmg:9,stun:.36,kb:300,lunge:150,reach:128,blade:true,len:96,kind:'trident'},
+  kick:null,
+  spin:{...ATK.spin,a0:.16,dmg:15,kb:560,reach:132,blade:true,len:96,kind:'trident'}
+};
+function drawTrident(c2,h,dx,dy,col,len=96){c2.save();c2.lineCap='round';c2.shadowColor=col;c2.shadowBlur=14;c2.strokeStyle='#8a6a3a';c2.lineWidth=4;
+  c2.beginPath();c2.moveTo(h.x-dx*26,h.y-dy*26);c2.lineTo(h.x+dx*(len-14),h.y+dy*(len-14));c2.stroke();
+  const tx=h.x+dx*(len-14),ty=h.y+dy*(len-14),px=-dy,py=dx;c2.strokeStyle=col;c2.lineWidth=3;c2.beginPath();
+  c2.moveTo(tx-px*9,ty-py*9);c2.lineTo(tx+px*9,ty+py*9);[-9,0,9].forEach(o=>{c2.moveTo(tx+px*o,ty+py*o);c2.lineTo(tx+px*o+dx*(o?12:18),ty+py*o+dy*(o?12:18))});c2.stroke();c2.restore()}
+/* hazards */
+function p2HzInit(){
+  if(hz.kind==='water'){hz.vents=[200,760];hz.bub=[];fs.forEach(f=>f.air=100)}
+  if(hz.kind==='lava'){hz.lava={st:'low',t:9,y:GROUND+30}}
+  if(hz.kind==='eclipse'){hz.total=false;hz.tt=0}
+}
+function p2Hz(dt,fight){
+  if(hz.kind==='water'){
+    fs.forEach(f=>{if(['held','lifted'].includes(f.state))return;
+      f.vx*=Math.pow(.45,dt);if(f.vy>240)f.vy=240;
+      const inVent=hz.vents.some(v=>Math.abs(f.x-v)<34);if(f.air===undefined)f.air=100;
+      if(inVent){f.air=Math.min(100,f.air+45*dt);if(!f.grounded)f.vy-=500*dt}
+      else if(fight)f.air=Math.max(0,f.air-5.5*dt);
+      if(fight&&f.air<=0&&f.state!=='ko'){f.drownT=(f.drownT||0)+dt;if(f.drownT>.6){f.drownT=0;f.hp-=4;f.flash=.1;word(f.x,f.y-110,'GLUG!',.7,true);if(f.hp<=0)knockOut(other(f),f,1)}}});
+    if(Math.random()<dt*30)hz.vents.forEach(v=>hz.bub.push({x:v+(Math.random()-.5)*40,y:GROUND,r:2+Math.random()*4,vy:-120-Math.random()*90}));
+    hz.bub.forEach(b=>{b.y+=b.vy*dt;b.x+=Math.sin(clock*3+b.y*.05)*20*dt});hz.bub=hz.bub.filter(b=>b.y>-10)}
+  if(hz.kind==='lava'){const lv=hz.lava;lv.t-=dt;
+    if(lv.st==='low'&&lv.t<=0&&fight){lv.st='warn';lv.t=1.5;tone(70,1.5,'sawtooth',.08,.6)}
+    else if(lv.st==='warn'&&lv.t<=0){lv.st='high';lv.t=4.5}
+    else if(lv.st==='high'&&lv.t<=0){lv.st='low';lv.t=9+Math.random()*3}
+    const target=lv.st==='high'?GROUND-26:GROUND+30;lv.y+=(target-lv.y)*Math.min(1,dt*2.5);
+    fs.forEach(f=>{if(['held','lifted','ko'].includes(f.state)||!fight)return;
+      if(f.y>lv.y+4&&!f.floorBlock){f.burnT=(f.burnT||0)+dt;if(f.burnT>.35){f.burnT=0;f.hp-=5;f.flash=.15;word(f.x,f.y-110,pick(['HOT!','SIZZLE!','OW OW OW!']),.8);SFX.hit(false);
+        if(f.hp<=0)knockOut(other(f),f,1);else if(!TUMBLING(f.state)){f.vy=-620;f.grounded=false;setState(f,'jump')}}}});
+    if(Math.random()<dt*20)parts.push({x:Math.random()*W,y:lv.y,vx:(Math.random()-.5)*40,vy:-80-Math.random()*120,life:.8,max:.8,c:Math.random()<.5?'#ff5a3c':'#ffd84a',sz:3})}
+  if(hz.kind==='eclipse'){const boss=fs[1];
+    if(fight&&!hz.total&&boss&&boss.hp<boss.maxHp*.5){hz.total=true;hz.tt=0;SFX.cine();shake=Math.max(shake,16);flashScreen=.14;tone(50,2,'sawtooth',.12,.5)}
+    if(hz.total){hz.tt+=dt;if(fight&&boss&&!['ko','held','lifted'].includes(boss.state))boss.en=Math.min(100,boss.en+4*dt)}}
+}
+function p2DrawBack(){
+  if(hz.kind==='water'){ctx.save();hz.vents.forEach(v=>{ctx.fillStyle='rgba(191,248,255,.08)';ctx.fillRect(v-30,0,60,GROUND);ctx.fillStyle='#2a6a6a';ctx.fillRect(v-24,GROUND-6,48,6)});ctx.strokeStyle='rgba(191,248,255,.7)';ctx.lineWidth=1.5;hz.bub.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.stroke()});ctx.restore()}
+  if(hz.kind==='lava'){const lv=hz.lava;ctx.save();if(lv.st==='warn'){ctx.globalAlpha=.5+.5*Math.sin(clock*20);ctx.fillStyle='#ff5a3c';ctx.font='15px "Press Start 2P",monospace';ctx.textAlign='center';ctx.fillText('LAVA RISING! GET UP HIGH',W/2,170);ctx.globalAlpha=1}
+    const g=ctx.createLinearGradient(0,lv.y,0,H);g.addColorStop(0,'#ffb35c');g.addColorStop(.15,'#ff5a3c');g.addColorStop(1,'#5a1008');ctx.fillStyle=g;ctx.shadowColor='#ff5a3c';ctx.shadowBlur=24;
+    ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W;x+=16)ctx.lineTo(x,lv.y+Math.sin(clock*3+x*.05)*4);ctx.lineTo(W,H);ctx.fill();ctx.restore()}
+  if(hz.kind==='eclipse'){ctx.save();const k=hz.total?1:.55+.1*Math.sin(clock*.3);ctx.fillStyle='rgba(255,216,74,.9)';ctx.shadowColor='#ffd84a';ctx.shadowBlur=60;ctx.beginPath();ctx.arc(480,150,62,0,7);ctx.fill();
+    ctx.shadowBlur=0;ctx.fillStyle='#07051a';ctx.beginPath();ctx.arc(480+70*(1-k),150-10*(1-k),60,0,7);ctx.fill();ctx.restore()}
+  if(L.bg==='mirrors'){ctx.save();ctx.globalAlpha=.16;fs.forEach(f=>{const r=f.rag;ctx.strokeStyle=f.color;ctx.lineWidth=5;ctx.beginPath();DRAWN.forEach(([a,b])=>{ctx.moveTo(W-r[a].x,r[a].y-40);ctx.lineTo(W-r[b].x,r[b].y-40)});ctx.stroke();ctx.beginPath();ctx.arc(W-r.head.x,r.head.y-40,10,0,7);ctx.stroke()});ctx.restore()}
+}
+function p2DrawFront(){
+  if(hz.kind==='water'){ctx.save();ctx.fillStyle='rgba(20,90,110,.22)';ctx.fillRect(0,0,W,H);ctx.globalAlpha=.08;ctx.fillStyle='#bff8ff';for(let i=0;i<5;i++){const x=((i*230+clock*20)%(W+200))-100;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+60,0);ctx.lineTo(x+160,GROUND);ctx.lineTo(x+90,GROUND);ctx.fill()}
+    ctx.globalAlpha=1;fs.forEach(f=>{if(f.air===undefined||f.air>=99)return;const x=f.x-20,y=f.y-122;ctx.fillStyle='#07051a';ctx.fillRect(x,y,40,5);ctx.fillStyle=f.air<30?'#ff3c5a':'#7dffe0';ctx.fillRect(x,y,40*f.air/100,5)});ctx.restore()}
+  if(hz.kind==='eclipse'&&hz.total){ctx.save();const k=Math.min(1,hz.tt/1.2);ctx.globalAlpha=.86*k;ctx.fillStyle='#000';ctx.beginPath();ctx.rect(0,0,W,H);
+    fs.forEach(f=>{ctx.moveTo(f.x+95,f.y-50);ctx.arc(f.x,f.y-50,95,0,Math.PI*2)});ctx.fill('evenodd');ctx.restore();
+    if(hz.tt<1.8)banner('TOTAL ECLIPSE','#ffd84a',64,'ONLY YOUR GLOW LIGHTS THE WAY')}
+}
+function paintP2Bg(b,L,rnd){
+  if(L.bg==='sunken'){b.fillStyle='#0a2a3a';for(let i=0;i<5;i++){const x=80+i*200;b.fillRect(x,120,34,GROUND-120);b.fillRect(x-10,110,54,14)}
+    b.fillStyle='#0d3a46';b.fillRect(0,100,W,16);b.strokeStyle='#2a8a6a';b.lineWidth=4;for(let i=0;i<14;i++){const x=rnd()*W;b.beginPath();b.moveTo(x,GROUND);b.quadraticCurveTo(x+20,GROUND-50,x-6,GROUND-90-rnd()*40);b.stroke()}}
+  else if(L.bg==='volcano'){b.fillStyle='#2a0a08';b.beginPath();b.moveTo(200,GROUND);b.lineTo(420,120);b.lineTo(540,120);b.lineTo(760,GROUND);b.fill();
+    b.fillStyle='rgba(255,90,60,.5)';b.beginPath();b.ellipse(480,118,62,10,0,0,7);b.fill();b.fillStyle='rgba(255,90,60,.12)';b.fillRect(0,0,W,GROUND)}
+  else if(L.bg==='mirrors'){for(let i=0;i<6;i++){const x=40+i*160;b.fillStyle='rgba(201,182,255,.06)';b.fillRect(x,70,110,GROUND-90);b.strokeStyle='rgba(201,182,255,.5)';b.lineWidth=3;b.strokeRect(x,70,110,GROUND-90);
+    b.strokeStyle='rgba(255,255,255,.15)';b.beginPath();b.moveTo(x+20,90);b.lineTo(x+50,60+GROUND*.3);b.stroke()}}
+  else if(L.bg==='keep'){b.fillStyle='#1a1a24';[[60,6],[880,6]].forEach(([x,n])=>{b.fillRect(x-40,GROUND-n*40,80,n*40);for(let k=0;k<4;k++)b.fillRect(x-40+k*22,GROUND-n*40-14,14,14)});
+    b.fillStyle='#22222e';b.fillRect(0,GROUND-80,W,80);b.fillStyle='rgba(255,216,74,.4)';[[140,200],[820,220],[480,260]].forEach(([x,y])=>b.fillRect(x,y,10,16))}
+  else if(L.bg==='eclipse'){b.fillStyle='#fff';for(let i=0;i<80;i++)b.fillRect(rnd()*W,rnd()*300,1.5,1.5);b.fillStyle='#14102a';b.beginPath();b.moveTo(0,GROUND);b.lineTo(160,330);b.lineTo(320,GROUND);b.moveTo(600,GROUND);b.lineTo(800,300);b.lineTo(W,GROUND);b.fill()}
+}
+
+let mirImgs=[];
+function p2Tick(dt){mirImgs.forEach(g=>g.life-=dt);mirImgs=mirImgs.filter(g=>g.life>0)}
+function drawMirImgs(){if(!mirImgs.length)return;ctx.save();ctx.lineCap='round';
+  mirImgs.forEach(g=>{ctx.globalAlpha=g.life/.6*.55;ctx.strokeStyle=g.c;ctx.shadowColor='#c9b6ff';ctx.shadowBlur=16;ctx.lineWidth=6;ctx.beginPath();
+    DRAWN.forEach(([a,b])=>{ctx.moveTo(g.pts[a].x,g.pts[a].y);ctx.lineTo(g.pts[b].x,g.pts[b].y)});ctx.stroke();ctx.beginPath();ctx.arc(g.pts.head.x,g.pts.head.y,10,0,7);ctx.stroke()});ctx.restore()}
+// double-tap block for Mirror Step; also counts down the step's invulnerability
+function p2Input(f,o,inp,dt){
+  if(f.inv>0)f.inv-=dt;
+  const dn=!!inp.down;
+  if(dn&&!f.dnPrev&&(f===fs[0]||game.mode==='2p')&&canMove(f,'mirror')&&!TUMBLING(f.state)&&!['held','lifted','ko','grab','throw'].includes(f.state)){
+    if(clock-(f.dnTap||-9)<.3){f.dnTap=-9;mirrorStep(f,o)}else f.dnTap=clock}
+  f.dnPrev=dn;
+}
+// what the CPU does about water, lava and mirror steps
+function p2AI(me,op,D,swing,mine){
+  if(swing&&mine('mirror')&&(me.mirCd||0)<clock&&Math.random()<D.block*.2){mirrorStep(me,op);me.mirCd=clock+4;return{...NONE}}
+  if(hz.kind==='water'&&me.air!==undefined&&me.air<38){const v=hz.vents.reduce((a,b)=>Math.abs(b-me.x)<Math.abs(a-me.x)?b:a);
+    if(Math.abs(v-me.x)>18){const h={...NONE,[v>me.x?'right':'left']:1};ai.hold=h;return h}ai.hold={...NONE};return{...NONE}}
+  if(hz.kind==='lava'&&hz.lava.st!=='low'&&me.y>GROUND-20){
+    const L2=blocks.filter(b=>b.alive&&b.kind==='ledge');if(!L2.length)return null;
+    const tgt=L2.reduce((a,b)=>Math.abs(b.x+b.w/2-me.x)<Math.abs(a.x+a.w/2-me.x)?b:a),cx=tgt.x+tgt.w/2,dx=cx-me.x;
+    const h={...NONE,[dx>0?'right':'left']:1};ai.hold=h;
+    return Math.abs(dx)<tgt.w/2+70&&me.grounded?{...h,jump:1}:h}
+  return null;
+}
+function capeFx(f){const cl=f.cl,d=cl.d;if(!d.embers&&!d.sparkle)return;if(Math.random()>(d.embers?.5:.3))return;
+  const p=cl.pts[(cl.colLen[0]-1)*cl.C+((Math.random()*cl.C)|0)];if(!p)return;
+  parts.push(d.embers?{x:p.x,y:p.y,vx:(Math.random()-.5)*60,vy:-260-Math.random()*120,life:.5,max:.5,c:Math.random()<.5?'#ff8a3c':'#ffd84a',sz:2.5}
+    :{x:p.x+(Math.random()-.5)*10,y:p.y,vx:(Math.random()-.5)*40,vy:-200,life:.45,max:.45,c:'#fff6c8',sz:2})}
+
 /* ---------- pause menu ---------- */
 const pauseEl=document.getElementById('pause');
 function setPause(on){
@@ -3690,7 +3863,7 @@ const DOJO_LIST=[
   {id:'dragon',m:'dragon'},{id:'shadow',m:'shadow'},{id:'iron',m:'iron'},{id:'stomp',m:'stomp'},{id:'tornado',m:'tornado'},{id:'hundred',m:'hundred'},
   {id:'staff',name:'BO STAFF',how:'take the staff from the rack, then {punch} or {spin}',touch:'take the staff from the rack, then PUNCH or ROUNDHOUSE'},
   {id:'arrow',name:'BOW',how:'take the bow from the rack, hold {punch} to draw, let go to shoot',touch:'take the bow from the rack, hold PUNCH, let go'},
-  {id:'nunchucks',m:'nunchucks'},{id:'sword',m:'sword'},{id:'star',m:'shuriken'},{id:'kusari',m:'kusari'},{id:'glide',m:'glide'},{id:'lash',m:'lash'},{id:'parry',m:'parry'},
+  {id:'nunchucks',m:'nunchucks'},{id:'sword',m:'sword'},{id:'star',m:'shuriken'},{id:'kusari',m:'kusari'},{id:'trident',m:'trident'},{id:'mirror',m:'mirror'},{id:'glide',m:'glide'},{id:'lash',m:'lash'},{id:'parry',m:'parry'},
   {id:'interrupt',name:'INTERRUPT',how:'turn on CHARGE DRILL, hit the dummy while the gold ! shows',touch:'turn on CHARGE DRILL, hit it during the gold !'}
 ];
 const DOJO_NEED=3;
@@ -3854,9 +4027,10 @@ const GLOWS=[{c:'#3cf2ff',name:'CYAN',need:0},{c:'#9dff6a',name:'LIME',need:2,fr
 const HEADS=[{id:'band',name:'HEADBAND',need:0},{id:'none',name:'BARE',need:0},{id:'topknot',name:'TOPKNOT',need:1},{id:'straw',name:'STRAW HAT',need:4},{id:'hood',name:'NINJA HOOD',need:9}];
 const TOPS=[{id:'none',name:'NONE',need:0},{id:'gi',name:'GI',need:1},{id:'sash',name:'SASH',need:6}];
 const BELTS=[{n:'WHITE',c:'#f4f0ff',at:0},{n:'YELLOW',c:'#ffd84a',at:3},{n:'GREEN',c:'#4fdc6a',at:7},{n:'BLUE',c:'#3c7dff',at:12},{n:'BROWN',c:'#b06a32',at:17},{n:'BLACK',c:'#1a1426',at:22,edge:GOLD}];
-const RACK=[{id:'',name:'BARE HANDS'},{id:'staff',name:'BO STAFF'},{id:'bow',name:'BOW'},{id:'nunchucks',name:'NUNCHUCKS',m:'nunchucks'},{id:'sword',name:'SWORD',m:'sword'},{id:'shuriken',name:'SHURIKEN',m:'shuriken'},{id:'kusari',name:'KUSARIGAMA',m:'kusari'}];
+const RACK=[{id:'',name:'BARE HANDS'},{id:'staff',name:'BO STAFF'},{id:'bow',name:'BOW'},{id:'nunchucks',name:'NUNCHUCKS',m:'nunchucks'},{id:'sword',name:'SWORD',m:'sword'},{id:'shuriken',name:'SHURIKEN',m:'shuriken'},{id:'kusari',name:'KUSARIGAMA',m:'kusari'},{id:'trident',name:'TRIDENT',m:'trident'}];
 const RACK_HOW={'':'Fists and feet only.',staff:'Punch and roundhouse swing the staff. Long reach, both ends hit on the roundhouse.',bow:'Hold punch to draw, let go to shoot. A full draw shoots harder.',
   nunchucks:'Punch hits twice, the roundhouse windmill hits three times. Fast but light.',sword:'Punch slashes, the roundhouse is a spinning cut. Longest reach; it cuts crates and bamboo in one hit.',
+  trident:'Punch is a long forward thrust, the roundhouse sweeps wide. Nothing reaches further.',
   kusari:'Punch throws the sickle out on its chain and drags them in. The roundhouse whirls it around you and hits three times.',
   shuriken:'Punch throws one star, roundhouse throws a fan of three. In the air they fly downward. Perfect for interrupting a gold ! from far away.'};
 let outfit={glow:'#3cf2ff',head:'band',top:'none',cape:'none'};
@@ -3913,7 +4087,7 @@ function renderGear(){
   chipList(document.getElementById('topChips'),TOPS,g=>outfit.top===g.id,gearOpen,g=>`<b>${g.name}</b>`,g=>'BEAT CH '+g.need,g=>{outfit.top=g.id;saveOutfit()});
   const rackOpen=r=>!r.m||dojoKnown().has(r.m);
   chipList(document.getElementById('rackChips'),RACK,r=>dojo.opt.weapon===r.id,rackOpen,r=>`<b style="color:${r.id?WPN[r.id].c:'#efeaff'}">${r.name}</b>`,r=>dojoChapter({m:r.m}),r=>{dojo.opt.weapon=r.id;
-    const want={staff:'staff',bow:'arrow',nunchucks:'nunchucks',sword:'sword',shuriken:'star',kusari:'kusari'}[r.id];if(want&&!dojoDone(DOJO_LIST.find(e=>e.id===want)))dojo.focus=want});
+    const want={staff:'staff',bow:'arrow',nunchucks:'nunchucks',sword:'sword',shuriken:'star',kusari:'kusari',trident:'trident'}[r.id];if(want&&!dojoDone(DOJO_LIST.find(e=>e.id===want)))dojo.focus=want});
   document.getElementById('rackHow').textContent=RACK_HOW[dojo.opt.weapon||'']+(dojo.opt.weapon?' In the dojo it never breaks.':'');
 }
 const wardCv=document.getElementById('wardCv'),wctx=wardCv.getContext('2d');
@@ -3934,6 +4108,3 @@ levelIx=CHAPTERS[story.sel].arena;L=LEVELS[levelIx];buildArena();fs=[mkF(380,1,C
 requestAnimationFrame(loop);
 })();
 </script>
-
-</body>
-</html>
