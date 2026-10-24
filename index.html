@@ -10,6 +10,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
+<title>Stick Fu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: one arcade cabinet screen, centered; HUD and menus live on the canvas, touch pad below on phones */
 :root{
@@ -2275,7 +2279,7 @@ CHAPTERS.push(
   {title:'VOLCANO FORGE',arena:15,cpu:'boss',reward:[],act:2,foe:{name:'EMBER',color:'#ff5a3c',cape:'flame'},panels:[
     {cap:'Inside the mountain, the forge that made every weapon in the League. Its smith wears a cape that never stops burning.',who:'EMBER',say:'Ronin paid me in gold. You can pay me in pain.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',.2,-1,'foe']]},
     {cap:'',who:'EMBER',say:'When the lava rises, find high ground. Or don’t. Makes no difference to me.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.3,-1,'foe']]}]},
-  {title:'HALL OF MIRRORS',arena:16,cpu:'boss',reward:['mirror'],act:2,foe:{name:'SHADOW YOU',color:'#8f6cff',mirror:true},panels:[
+  {title:'HALL OF MIRRORS',arena:16,cpu:'medium',reward:['mirror'],act:2,foe:{name:'SHADOW YOU',color:'#8f6cff',mirror:true},panels:[
     {cap:'A hall of mirrors under Ronin’s keep. Your reflection does not copy you. It steps out of the glass.',who:'SHADOW YOU',say:'Every move you learned, I learned too.',fig:[[.3,'idle',0,1,'you'],[.7,'idle',0,-1,'foe']]},
     {cap:'',who:'SHADOW YOU',say:'You cannot beat yourself. Nobody can.',fig:[[.3,'idle',.1,1,'you'],[.7,'win',.2,-1,'foe']]}]},
   {title:'RONIN’S KEEP',arena:17,cpu:'boss',reward:[],act:2,foe:{name:'RONIN',color:'#e8dcc0',cape:'tatter',ronin:true},panels:[
@@ -3033,6 +3037,7 @@ function startMatch(){
     const known=storyMoves(story.ch);fs[0].moves=known;fs[1].moves=new Set([...known,...rewardsOf(C)]);
     if(C.foe.cape){capeAttach(fs[1],C.foe.cape);['lash','parry','glide'].forEach(m=>fs[1].moves.add(m))}
     if(C.foe.mirror){fs[1].outfit={...outfit,glow:C.foe.color};if(outfit.cape&&outfit.cape!=='none'){capeAttach(fs[1],outfit.cape);['lash','parry','glide'].forEach(m=>fs[1].moves.add(m))}}
+    if(C.foe.mirror)fs[1].moves.delete('mirror');
     if(C.foe.ronin||C.foe.emperor)fs[1].moves.add('mirror');
     if(story.ch>0&&rewardsOf(CHAPTERS[story.ch-1]).length){const ms=rewardsOf(CHAPTERS[story.ch-1]);game.hint={text:(ms.length>1?'NEW: ':'NEW MOVE: ')+ms.map(m=>MOVES[m].name+' · '+moveHow(m)).join('  /  '),t:9}}
   }else{
