@@ -14,6 +14,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
+<title>Stick Fu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: one arcade cabinet screen, centered; HUD and menus live on the canvas, touch pad below on phones */
 :root{
@@ -205,7 +209,7 @@ body.driving .padhint{display:none!important}
     <div class="levels" id="levels" role="group" aria-label="Arena"></div>
     <p class="info" id="lvlInfo"></p>
     <button class="go" id="start">PLAY</button>
-    <div class="row"><button class="opt" data-snd="music" type="button">MUSIC: ON</button><button class="opt" data-snd="sfx" type="button">SOUND: ON</button></div>
+    <div class="row"><button class="opt" data-snd="music" type="button">MUSIC: ON</button><button class="opt" data-snd="sfx" type="button">SOUND: ON</button><button class="opt" data-snd="buzz" type="button">VIBRATE: ON</button></div>
   </div>
   <div class="overlay" id="story" hidden>
     <p class="chap" id="chapTitle">CHAPTER 1</p>
@@ -248,7 +252,7 @@ body.driving .padhint{display:none!important}
     <p class="result">PAUSED</p>
     <button class="go" id="pResume" type="button">RESUME</button>
     <div class="row"><button class="opt" id="pRestart" type="button">RESTART</button><button class="opt" id="pSkip" type="button" hidden>SKIP TRAINING</button><button class="opt" id="pQuit" type="button">QUIT TO MENU</button></div>
-    <div class="row"><button class="opt" data-snd="music" type="button">MUSIC: ON</button><button class="opt" data-snd="sfx" type="button">SOUND: ON</button></div>
+    <div class="row"><button class="opt" data-snd="music" type="button">MUSIC: ON</button><button class="opt" data-snd="sfx" type="button">SOUND: ON</button><button class="opt" data-snd="buzz" type="button">VIBRATE: ON</button></div>
   </div>
   <div class="overlay" id="over" hidden>
     <p class="result" id="resultText">YOU WIN</p>
@@ -416,7 +420,24 @@ const pick=a=>a[Math.random()*a.length|0];
    Music: see the orchestra below. Slow-mo muffles it. */
 let master=null,sfxBus=null,musBus=null,musFilter=null,musDelay=null,noiseBuf=null;
 const sfxOut=()=>sfxBus||ac.destination;
-const snd={music:true,sfx:true};try{Object.assign(snd,JSON.parse(localStorage.getItem('stickfu.sound')||'{}'))}catch(e){}
+const snd={music:true,sfx:true,buzz:true};try{Object.assign(snd,JSON.parse(localStorage.getItem('stickfu.sound')||'{}'))}catch(e){}
+/* vibration: Android uses the Vibration API; iPhones (iOS 18+) get a light tap from a hidden switch */
+let buzzAt=0,iosSw=null;
+function buzz(ms){
+  if(!snd.buzz)return;const now=performance.now();if(now-buzzAt<60)return;buzzAt=now;
+  try{if(navigator.vibrate){navigator.vibrate(ms);return}
+    if(!iosSw){const l=document.createElement('label'),i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');l.appendChild(i);l.style.cssText='position:fixed;left:-99px;top:0;opacity:0;pointer-events:none';document.body.appendChild(l);iosSw=l}
+    iosSw.click()}catch(e){}
+}
+const bz={me:null,hp:[0,0],shake:0};
+function buzzTick(){
+  if(!snd.buzz||!fs[0]||!fs[1])return;
+  if(bz.me!==fs[0]){bz.me=fs[0];bz.hp=[fs[0].hp,fs[1].hp];return}
+  const humans=game.mode==='2p'?[0,1]:[0];
+  for(let i=0;i<2;i++){const d=bz.hp[i]-fs[i].hp;
+    if(d>.5){if(humans.includes(i))buzz(fs[i].hp<=0?[90,50,160]:Math.round(Math.min(90,20+d*3)));else if(fs[i].hp<=0)buzz([40,40,120]);else buzz(12)}}
+  if(shake>=13&&bz.shake<13)buzz(45);bz.shake=shake;bz.hp=[fs[0].hp,fs[1].hp];
+}
 function audioGraph(){
   master=ac.createGain();master.connect(ac.destination);
   sfxBus=ac.createGain();sfxBus.connect(master);
@@ -431,7 +452,7 @@ function applySound(){
   musBus.gain.setTargetAtTime(snd.music?(game.paused?.12:.45):0,t,.15);
 }
 function saveSound(){try{localStorage.setItem('stickfu.sound',JSON.stringify(snd))}catch(e){}applySound();syncSoundButtons()}
-function syncSoundButtons(){document.querySelectorAll('[data-snd]').forEach(b=>{const k=b.dataset.snd;b.textContent=(k==='music'?'MUSIC: ':'SOUND: ')+(snd[k]?'ON':'OFF');b.setAttribute('aria-pressed',snd[k])})}
+function syncSoundButtons(){document.querySelectorAll('[data-snd]').forEach(b=>{const k=b.dataset.snd;b.textContent=(k==='music'?'MUSIC: ':k==='buzz'?'VIBRATE: ':'SOUND: ')+(snd[k]?'ON':'OFF');b.setAttribute('aria-pressed',snd[k])})}
 const midiHz=m=>440*Math.pow(2,(m-69)/12);
 /* ---------- the orchestra ----------
    Public-domain classics arranged for a small synthesized orchestra (no audio files):
@@ -3094,7 +3115,7 @@ function step(dt){
   const ia=fight?(wheel.open&&wheel.src==='key'?NONE:readKeys(solo?MAP1CPU:MAP1)):NONE;
   const ib=fight&&!b.dummy?(solo?(game.tut?trainingInput(b,a,sdt):aiInput(b,a,sdt)):readKeys(MAP2)):NONE;
   if(game.hint&&fight)game.hint.t-=dt;
-  hzUpdate(sdt);act2Hz(sdt,fight);p2Hz(sdt,fight);p2Tick(sdt);
+  hzUpdate(sdt);act2Hz(sdt,fight);buzzTick();p2Hz(sdt,fight);p2Tick(sdt);
   updateF(a,b,ia,sdt);if(b.dummy)updateDummy(b,a,sdt);else updateF(b,a,ib,sdt);
   capeStep(a,sdt);capeStep(b,sdt);
   if(game.mode==='dojo'){a.hp=a.dhp=a.maxHp;if(dojo.opt.chi)a.en=100;if(dojo.opt.weapon&&!a.weapon&&!TUMBLING(a.state)&&a.state!=='held')a.weapon={type:dojo.opt.weapon,uses:Infinity}}
@@ -3685,7 +3706,7 @@ document.getElementById('pResume').addEventListener('click',()=>setPause(false))
 document.getElementById('pRestart').addEventListener('click',()=>{const ph=game.phase;setPause(false);if(game.mode==='dojo'){startDojo();return}if(ph==='drive')startDrive();else if(ph==='snipe')startSnipe();else if(ph==='glide')startGlide();else startMatch()});
 document.getElementById('pSkip').addEventListener('click',()=>{setPause(false);if(game.tut)finishTraining()});
 document.getElementById('pQuit').addEventListener('click',quitToMenu);
-document.querySelectorAll('[data-snd]').forEach(b=>b.addEventListener('click',()=>{audio();snd[b.dataset.snd]=!snd[b.dataset.snd];saveSound()}));
+document.querySelectorAll('[data-snd]').forEach(b=>b.addEventListener('click',()=>{audio();snd[b.dataset.snd]=!snd[b.dataset.snd];saveSound();if(b.dataset.snd==='buzz'&&snd.buzz)buzz(40)}));
 syncSoundButtons();
 document.querySelectorAll('[data-scheme]').forEach(el=>el.classList.toggle('on',el.dataset.scheme===scheme));
 // leaving the tab or app mid-fight pauses it
