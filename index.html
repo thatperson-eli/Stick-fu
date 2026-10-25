@@ -18,6 +18,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
+<title>Stick Fu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: one arcade cabinet screen, centered; HUD and menus live on the canvas, touch pad below on phones */
 :root{
@@ -449,7 +453,7 @@ function audioGraph(){
 function applySound(){
   if(!ac||!sfxBus)return;const t=ac.currentTime;
   sfxBus.gain.setTargetAtTime(snd.sfx?1:0,t,.02);
-  musBus.gain.setTargetAtTime(snd.music?(game.paused?.12:.45):0,t,.15);
+  musBus.gain.setTargetAtTime(snd.music?(game.paused?.32:.45):0,t,.15);
 }
 function saveSound(){try{localStorage.setItem('stickfu.sound',JSON.stringify(snd))}catch(e){}applySound();syncSoundButtons()}
 function syncSoundButtons(){document.querySelectorAll('[data-snd]').forEach(b=>{const k=b.dataset.snd;b.textContent=(k==='music'?'MUSIC: ':k==='buzz'?'VIBRATE: ':'SOUND: ')+(snd[k]?'ON':'OFF');b.setAttribute('aria-pressed',snd[k])})}
@@ -457,7 +461,7 @@ const midiHz=m=>440*Math.pow(2,(m-69)/12);
 /* ---------- the orchestra ----------
    Public-domain classics arranged for a small synthesized orchestra (no audio files):
    Beethoven's 5th and the Moonlight Sonata, Grieg's Hall of the Mountain King, Bach's Toccata in D minor,
-   Paganini's 24th Caprice on solo violin, and Ode to Joy. Each arena has its own piece; final rounds and
+   Paganini's 24th Caprice on solo violin, Ode to Joy, and the William Tell gallop for the menu and pause screen. Each arena has its own piece; final rounds and
    low health bring in timpani and extra strings. Strings, violin, cello, piano, organ, brass and timpani
    are all built from oscillators, filters, vibrato and a generated concert-hall reverb. */
 const midiOf=n=>{const r=/^([A-G])([#b]?)(-?\d)$/.exec(n);return 12*(+r[3]+1)+{C:0,D:2,E:4,F:5,G:7,A:9,B:11}[r[1]]+(r[2]==='#'?1:r[2]==='b'?-1:0)};
@@ -480,6 +484,18 @@ const PIECES={
     {inst:'brass',vol:1,int:1,seq:`r/.5 G3/.5 G3/.5 G3/.5 Eb3/3.5 r/.5 F3/.5 F3/.5 F3/.5 D3/5.5 r/1 r/32 G4/.5 G4/.5 G4/.5 G4/.5 Ab4/.5 Ab4/.5 Ab4/.5 Ab4/.5 G4/.5 G4/.5 G4/.5 G4/.5 F4/.5 F4/.5 Eb4/.5 D4/.5 C4/2 G3/2 C4/4`},
     {inst:'str',vol:.6,int:1,seq:`r/14 ${R('C3/.5',8)} ${R('Ab2/.5',8)} ${R('C3/.5',8)} ${R('G2/.5',8)} ${R('G2/.5',24)} ${R('C3/.5',8)} ${R('C3/.5',8)} ${R('F2/.5',8)} ${R('G2/.5',8)} ${R('C3/.5',8)}`},
     {inst:'timp',vol:1,seq:`r/2 C2/3.5 r/2.5 G1/5.5 r/.5  r/2 C2/2 r/2 C2/2 r/2 Ab1/2 r/2 G1/2  r/2 G1/2 r/2 G1/2 r/2 G1/2 r/2 C2/2  C2/.5 C2/.5 C2/.5 C2/.5 r/2 G1/.5 G1/.5 G1/.5 G1/.5 r/2 C2/2 G1/2 C2/4`}]},
+  tell:{bpm:152,parts:(()=>{
+    // Rossini, William Tell Overture: the galloping finale (1829)
+    const g=n=>`${n}/.25 ${n}/.25 ${n}/.5`,mel=`${g('E4')} ${g('E4')} E4/.25 E4/.25 A4/.5 B4/.5 C#5/.5 ${g('E4')} ${g('E4')} B3/.25 B3/.25 E4/.5 F#4/.5 G#4/.5
+      ${g('E4')} ${g('E4')} E4/.25 E4/.25 A4/.5 B4/.5 C#5/.5 ${g('C#5')} ${g('B4')} G#4/.5 F#4/.5 E4/1
+      ${g('B4')} ${g('B4')} B4/.25 B4/.25 E5/.5 D#5/.5 C#5/.5 ${g('B4')} ${g('A4')} ${g('G#4')} F#4/1
+      ${g('E4')} ${g('E4')} E4/.25 E4/.25 A4/.5 B4/.5 C#5/.5 ${g('C#5')} ${g('B4')} G#4/.5 F#4/.5 E4/1`;
+    const CH={E:['E3+G#3+B3','E2','B1'],A:['E3+A3+C#4','A1','E2'],B:['D#3+F#3+B3','B1','F#1'],B7:['D#3+F#3+A3','B1','F#2']};
+    const bars='E A E B7 E A B7 E B E B7 B E A B7 E'.split(' ');
+    const gal=bars.map(c=>`${g(CH[c][0])} ${g(CH[c][0])}`).join(' ');
+    const bass=bars.map(c=>`${CH[c][1]}/.5 ${CH[c][2]}/.5 ${CH[c][1]}/.5 ${CH[c][2]}/.5`).join(' ');
+    const timp=bars.map(c=>{const r=CH[c][1];return`${r}/.5 r/.5 ${r}/.25 ${r}/.25 r/.5`}).join(' ');
+    return[{inst:'brass',vol:.8,seq:mel},{inst:'vln',vol:.62,tr:12,seq:mel},{inst:'str',vol:.45,stac:1,seq:gal},{inst:'cello',vol:.75,stac:1,seq:bass},{inst:'timp',vol:.6,seq:timp}]})()},
   moon3:{bpm:150,parts:[
     {inst:'pno',vol:.85,seq:[mArp('G#3','C#4','E4'),mArp('G#3','C#4','E4'),mArp('B#3','D#4','F#4'),mArp('B#3','D#4','F#4'),mArp('G#3','C#4','E4'),mArp('A3','C#4','E4'),mArp('A3','C#4','F#4'),mArp('B#3','D#4','F#4')].join(' ')},
     {inst:'pizz',vol:1,seq:[R('C#2+C#3/.5',8),R('C#2+C#3/.5',8),R('B#1+B#2/.5',8),R('B#1+B#2/.5',8),R('C#2+C#3/.5',8),R('A1+A2/.5',8),R('F#1+F#2/.5',8),R('G#1+G#2/.5',8)].join(' ')},
@@ -527,7 +543,7 @@ const PIECES={
 };
 for(const k in PIECES){const P_=PIECES[k];P_.parts.forEach(p=>{Object.assign(p,parseSeq(p.seq,p.tr||0))});P_.len=Math.max(...P_.parts.map(p=>p.len));
   P_.parts.forEach(p=>{if(p.len<P_.len-.01&&p.len>0){const base=p.ev.slice();for(let o=p.len;o<P_.len-.01;o+=p.len)base.forEach(e=>p.ev.push({...e,b:e.b+o}))}})}
-const TRACK_PIECE={sunken:'moon1',volcano:'troll',mirrors:'moon3',keep:'beet5',eclipse:'toccata',court:'ode',gorge:'beet5',train:'troll',desert:'caprice',glide:'troll',menu:'beet5',story:'ode',grid:'beet5',tower:'moon3',ice:'caprice',moon:'moon1',foundry:'troll',castle:'beet5',road:'troll',
+const TRACK_PIECE={sunken:'moon1',volcano:'troll',mirrors:'moon3',keep:'beet5',eclipse:'toccata',court:'ode',gorge:'beet5',train:'troll',desert:'caprice',glide:'troll',menu:'tell',pause:'tell',story:'ode',grid:'beet5',tower:'moon3',ice:'caprice',moon:'moon1',foundry:'troll',castle:'beet5',road:'troll',
   market:'caprice',bamboo:'moon3',temple:'ode',summit:'toccata',ridge:'moon1',dojo:'moon1'};
 let verb=null;
 function hall(){if(verb)return verb;verb=ac.createConvolver();const len=ac.sampleRate*2.8|0,b=ac.createBuffer(2,len,ac.sampleRate);
@@ -566,6 +582,7 @@ function startPiece(key){
 }
 function musicTrack(){
   const ph=game.phase;
+  if(game.paused)return'pause';
   if(ph==='drive'||ph==='driveOver')return'road';
   if(ph==='glide'||ph==='glideOver')return'glide';
   if(ph==='snipe'||ph==='snipeOver')return'ridge';
@@ -580,7 +597,6 @@ function musicTick(){
   const slow=cine.on||(rw&&rw.slow&&(game.phase==='drive'||game.phase==='driveOver'));
   musFilter.frequency.setTargetAtTime(slow?520:18000,now,.08);
   if(key!==mus.key)startPiece(key);
-  if(game.paused){mus.time=Math.max(mus.time,now+.1);return}
   if(mus.time<now-.2)mus.time=now+.05;
   let int=0;
   if(rw&&game.phase==='drive'&&rw.boss)int=1;
