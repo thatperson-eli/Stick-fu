@@ -22,6 +22,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
+<title>Stick Fu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&display=swap">
 <style>
 /* Layout: one arcade cabinet screen, centered; HUD and menus live on the canvas, touch pad below on phones */
 :root{
@@ -136,6 +140,16 @@ kbd{font-family:var(--pixel);font-size:9px;border:1px solid #2a1f66;border-radiu
 .padhint{display:none;width:100%;max-width:960px;font-size:8px;line-height:1.8;color:var(--dim);margin:0;text-align:center}
 /* fullscreen toggle (hidden where the browser can't do it) */
 .overlay{z-index:8}
+#board,#nameBox{z-index:12!important;background:rgba(7,5,26,.94)}
+.blist{width:min(560px,92%);max-height:52%;overflow:auto}
+.blist table{width:100%;border-collapse:collapse;font-size:clamp(8px,1.3vw,11px);color:var(--ink)}
+.blist th{color:var(--gold);font-weight:400;text-align:left;padding:4px 6px}
+.blist td{padding:5px 6px;border-top:1px solid rgba(255,255,255,.08)}
+.blist td:nth-child(3){color:var(--p1)}
+.blist tr.me td{color:var(--gold)}
+#nameIn{font:inherit;font-size:clamp(14px,2.4vw,20px);text-transform:uppercase;text-align:center;width:min(320px,80%);padding:10px;background:#120d2e;color:#fff;border:2px solid var(--p1);border-radius:4px;outline:none}
+#toast{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:13;background:rgba(7,5,26,.9);border:1px solid var(--gold);color:var(--ink);padding:8px 14px;border-radius:4px;font-size:clamp(8px,1.3vw,11px);pointer-events:none;white-space:nowrap}
+#toast b{color:var(--gold);font-weight:400}
 #fsBtn{transform:translateX(4px)}
 #pauseBtn{transform:translateX(-36px)}
 body:not(.playing) #pauseBtn{display:none}
@@ -209,6 +223,7 @@ body.driving .padhint{display:none!important}
       <button class="opt mode" id="m-cpu" data-mode="cpu" aria-pressed="false">VS CPU</button>
       <button class="opt mode" id="m-2p" data-mode="2p" aria-pressed="false">2 PLAYERS</button>
       <button class="opt dojob" id="m-dojo" type="button">DOJO</button>
+      <button class="opt" id="m-board" type="button">LEADERBOARD</button>
     </div>
     <div class="levels" id="levels" role="group" aria-label="Arena"></div>
     <p class="info" id="lvlInfo"></p>
@@ -266,6 +281,20 @@ body.driving .padhint{display:none!important}
       <button class="opt" id="toMenu">MENU</button>
     </div>
   </div>
+  <div class="overlay" id="board" hidden>
+    <p class="ver">STORY MODE · BEST SCORE ON EACH CHAPTER, ADDED UP</p>
+    <p class="result">LEADERBOARD</p>
+    <p class="info" id="boardMe"></p>
+    <div class="blist" id="boardList"></div>
+    <div class="row"><button class="opt" id="boardName" type="button">CHANGE NAME</button><button class="go" id="boardClose" type="button">CLOSE</button></div>
+  </div>
+  <div class="overlay" id="nameBox" hidden>
+    <p class="result">YOUR NAME</p>
+    <p class="info" id="nameMsg"></p>
+    <input id="nameIn" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="NAME" aria-label="Your player name">
+    <div class="row"><button class="go" id="nameSave" type="button">SAVE</button><button class="opt" id="nameSkip" type="button">NOT NOW</button></div>
+  </div>
+  <div id="toast" role="status" hidden></div>
 </div>
 
 <div id="wheel" hidden></div>
@@ -350,7 +379,7 @@ const lerp=(a,b,k)=>a+(b-a)*k,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const held=new Set(),pressT={};
 const BUFFER_MS=180;
 const GAMEKEYS=new Set(['shift','a','d','w','s','j','k','l','i','u',';',"'",'v','b','arrowleft','arrowright','arrowup','arrowdown',',','.','/',' ','enter']);
-addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;const k=e.key.toLowerCase();
   if(GAMEKEYS.has(k)&&game.phase!=='menu'&&game.phase!=='match')e.preventDefault();
   audio();
   if(k===' '){e.preventDefault();if(!e.repeat&&game.phase==='fight'){const r=cv.getBoundingClientRect();openWheel('key',r.left+r.width/2,r.top+r.height/2)}if(game.phase!=='snipe')return}
@@ -1260,7 +1289,7 @@ function strike(att,def,a,isShot){
   if(def.wantSpecial&&def.wantSpecial.tell){def.wantSpecial=null;if(att===fs[0])dojoMark('interrupt');word(def.x,def.y-130,'INTERRUPTED!',.7,true)}
   def.hp-=dmg;def.lastHitBy=att;def.flash=.14;
   att.en=Math.min(100,att.en+(a.quiet?2:12));def.en=Math.min(100,def.en+(a.quiet?1:6));
-  att.combo=att.comboT>0?att.combo+1:1;att.comboT=1;if(att.combo>1)att.showCombo=1;
+  att.combo=att.comboT>0?att.combo+1:1;att.comboT=1;if(att===fs[0])game.maxCombo=Math.max(game.maxCombo||0,att.combo);if(att.combo>1)att.showCombo=1;
   hitstop=a.quiet?.012:dmg>=10?.07:.04;shake=Math.min(18,dmg*1.1);
   sparks(at.x,at.y,att.color,a.quiet?6:18+dmg,push);SFX.hit(dmg>=10);
   const lethal=def.hp<=0;
@@ -3082,10 +3111,11 @@ function startMatch(){
     fs=[mkF(380,1,C1,game.mode==='cpu'?'YOU':'P1'),mkF(580,-1,C2,game.mode==='cpu'?cpuName:'P2')];
   }
   fs[0].maxHp=100;fs[1].maxHp=100;applyOutfit(fs[0]);
-  game.round=1;resetRound();menu.hidden=true;over.hidden=true;storyEl.hidden=true;unlockEl.hidden=true;refreshPad();
+  game.round=1;game.maxCombo=0;resetRound();menu.hidden=true;over.hidden=true;storyEl.hidden=true;unlockEl.hidden=true;refreshPad();
   if(game.mode==='story'&&story.ch===0&&!tutDone)startTraining();
 }
 function storyAdvance(){
+  try{bdRecord(story.ch)}catch(e){}
   const ch=story.ch,next=ch+1,firstDojo=ch===0&&storyMax<1,newCapes=CAPES.filter(c=>c.need===next&&storyMax<next);
   storyMax=Math.max(storyMax,next);if(newCapes.length){outfit.cape=newCapes[0].id;saveOutfit()}try{localStorage.setItem('stickfu.story',String(storyMax))}catch(e){}
   if(next<CHAPTERS.length){unlocked=Math.max(unlocked,CHAPTERS[next].arena);saveUnlock()}
@@ -3705,6 +3735,68 @@ function capeFx(f){const cl=f.cl,d=cl.d;if(!d.embers&&!d.sparkle)return;if(Math.
   const p=cl.pts[(cl.colLen[0]-1)*cl.C+((Math.random()*cl.C)|0)];if(!p)return;
   parts.push(d.embers?{x:p.x,y:p.y,vx:(Math.random()-.5)*60,vy:-260-Math.random()*120,life:.5,max:.5,c:Math.random()<.5?'#ff8a3c':'#ffd84a',sz:2.5}
     :{x:p.x+(Math.random()-.5)*10,y:p.y,vx:(Math.random()-.5)*40,vy:-200,life:.45,max:.45,c:'#fff6c8',sz:2})}
+
+/* ---------- leaderboard (Google Sheets via an Apps Script web app) ---------- */
+const BOARD_URL='https://script.google.com/macros/s/AKfycbxlVnna8OQZjEeH5YAirXCbldIrIo2o4ix_VZzXp9Ax7mUhFjxWyLf-ZXqfs9XayOGP/exec';
+let player={name:'',key:''};try{Object.assign(player,JSON.parse(localStorage.getItem('stickfu.player')||'{}'))}catch(e){}
+if(!player.key){player.key=Array.from({length:24},()=>'abcdefghijkmnpqrstuvwxyz23456789'[Math.random()*32|0]).join('');savePlayer()}
+function savePlayer(){try{localStorage.setItem('stickfu.player',JSON.stringify(player))}catch(e){}}
+let bdQueue=[];try{bdQueue=JSON.parse(localStorage.getItem('stickfu.queue')||'[]')}catch(e){}
+const saveQueue=()=>{try{localStorage.setItem('stickfu.queue',JSON.stringify(bdQueue.slice(-40)))}catch(e){}};
+const bdOn=()=>BOARD_URL.startsWith('https://');
+function bdCall(params){const u=BOARD_URL+'?'+new URLSearchParams(params).toString();return fetch(u,{redirect:'follow'}).then(r=>r.json())}
+const toastEl=document.getElementById('toast');let toastT=null;
+function toast(html,ms=4200){toastEl.innerHTML=html;toastEl.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>toastEl.hidden=true,ms)}
+const fmt=n=>Number(n).toLocaleString('en-US');
+// score for beating a story chapter
+function chapterScore(ch){
+  const C=CHAPTERS[ch];if(C.type)return{score:1500,hp:0,secs:0,combo:0};
+  const me=fs[0],foe=fs[1],hp=Math.max(0,Math.round(me?me.hp:0)),secs=Math.max(0,Math.round(game.timer||0)),combo=Math.min(10,game.maxCombo||0);
+  const flawless=foe&&foe.wins===0;
+  return{score:Math.min(5000,1000+hp*10+secs*10+combo*50+(flawless?500:0)),hp,secs,combo,flawless};
+}
+function bdRecord(ch){
+  if(game.mode!=='story')return;const s=chapterScore(ch),C=CHAPTERS[ch];
+  const entry={ch:ch+1,chname:C.title,score:s.score,hp:s.hp,secs:s.secs,combo:s.combo,ver:'18'};
+  toast(`<b>+${fmt(s.score)}</b> POINTS${s.flawless?' · FLAWLESS':''}${s.combo>2?' · '+s.combo+'-HIT COMBO':''}`);
+  if(!bdOn())return;bdQueue.push(entry);saveQueue();
+  if(!player.name){let asked=false;try{asked=localStorage.getItem('stickfu.asked')==='1'}catch(e){}if(!asked)setTimeout(()=>openName(true),600);return}
+  bdFlush();
+}
+let bdBusy=false;
+function bdFlush(){
+  if(!bdOn()||!player.name||bdBusy||!bdQueue.length)return;bdBusy=true;const e=bdQueue[0];
+  bdCall({action:'submit',name:player.name,key:player.key,...e}).then(r=>{bdBusy=false;
+    if(r.ok){bdQueue.shift();saveQueue();if(r.me)toast(`<b>+${fmt(e.score)}</b> SAVED · YOU ARE <b>#${r.me.rank}</b> OF ${r.players}`);if(bdQueue.length)bdFlush()}
+    else if(r.err==='NAME TAKEN'){player.name='';savePlayer();openName(true,'THAT NAME IS TAKEN. PICK ANOTHER.')}
+    else{bdQueue.shift();saveQueue()}}).catch(()=>{bdBusy=false})
+}
+// name entry
+const nameEl=document.getElementById('nameBox'),nameIn=document.getElementById('nameIn'),nameMsg=document.getElementById('nameMsg');
+function openName(fromWin,msg){nameEl.hidden=false;nameIn.value=player.name||'';nameMsg.textContent=msg||(fromWin?'PUT YOUR SCORE ON THE LEADERBOARD. NO PASSWORD, JUST A NAME.':'CHOOSE THE NAME OTHER PLAYERS SEE.');setTimeout(()=>nameIn.focus(),50)}
+document.getElementById('nameSave').addEventListener('click',()=>{
+  const n=nameIn.value.trim().toUpperCase().replace(/[^A-Z0-9_ ]/g,'').replace(/\s+/g,' ').slice(0,14);
+  if(n.length<2){nameMsg.textContent='2 TO 14 LETTERS OR NUMBERS.';return}
+  if(!bdOn()){player.name=n;savePlayer();nameEl.hidden=true;return}
+  nameMsg.textContent='CHECKING...';
+  bdCall({action:'claim',name:n,key:player.key}).then(r=>{if(r.ok){player.name=r.name;savePlayer();nameEl.hidden=true;toast(`YOU ARE <b>${r.name}</b>`);bdFlush();if(!boardEl.hidden)openBoard()}else nameMsg.textContent=r.err||'TRY AGAIN.'})
+    .catch(()=>nameMsg.textContent='NO CONNECTION. TRY AGAIN.')});
+nameIn.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('nameSave').click()});
+document.getElementById('nameSkip').addEventListener('click',()=>{nameEl.hidden=true;try{localStorage.setItem('stickfu.asked','1')}catch(e){}});
+// the board itself
+const boardEl=document.getElementById('board'),boardList=document.getElementById('boardList');
+function openBoard(){boardEl.hidden=false;document.getElementById('boardMe').innerHTML=player.name?`YOU ARE <b>${player.name}</b>`:'YOU HAVE NO NAME YET';
+  if(!bdOn()){boardList.innerHTML='<p class="info">The leaderboard is not connected yet.</p>';return}
+  boardList.innerHTML='<p class="info">LOADING...</p>';bdFlush();
+  bdCall({action:'board',me:player.name||''}).then(r=>{
+    if(!r.top||!r.top.length){boardList.innerHTML='<p class="info">No scores yet. Beat a story chapter to be first.</p>';return}
+    const row=t=>`<tr class="${t.name===player.name?'me':''}"><td>#${t.rank}</td><td>${t.name.replace(/</g,'')}</td><td>${fmt(t.score)}</td><td>CH ${t.furthest}</td></tr>`;
+    boardList.innerHTML=`<table><tr><th></th><th>PLAYER</th><th>SCORE</th><th>FURTHEST</th></tr>${r.top.map(row).join('')}${r.me&&r.me.rank>25?row(r.me):''}</table>`})
+  .catch(()=>boardList.innerHTML='<p class="info">Could not load the leaderboard. Check your connection.</p>')}
+document.getElementById('m-board').addEventListener('click',openBoard);
+document.getElementById('boardClose').addEventListener('click',()=>boardEl.hidden=true);
+document.getElementById('boardName').addEventListener('click',()=>openName(false));
+setTimeout(bdFlush,2500);
 
 /* ---------- pause menu ---------- */
 const pauseEl=document.getElementById('pause');
